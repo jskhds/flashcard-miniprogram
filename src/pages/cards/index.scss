@@ -124,7 +124,7 @@
   transition: transform 0.25s ease;
 
   &--swiped {
-    transform: translateX(-96rpx);
+    transform: translateX(-192rpx);
   }
 
   &:active {
@@ -200,6 +200,11 @@
 
   &:active {
     opacity: 0.8;
+  }
+
+  &--edit {
+    background: $bg-surface-2;
+    color: $text-primary;
   }
 
   &--delete {

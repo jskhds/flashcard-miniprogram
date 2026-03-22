@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react'
 import Taro from '@tarojs/taro'
-import { View, Text, Input, ScrollView } from '@tarojs/components'
+import { View, Text, Input } from '@tarojs/components'
 import { getDecks, saveDecks, deleteDeck } from '../../utils/storage'
 import { getDisplayStatus, isDue, createDeck } from '../../utils/sm2'
 import { Deck } from '../../types'
@@ -110,7 +110,7 @@ export default function Decks() {
           <Text className='decks-empty__desc'>点击右下角 + 号创建第一个卡组</Text>
         </View>
       ) : (
-        <ScrollView scrollY className='decks-list'>
+        <View className='decks-list'>
           {decks.map(deck => {
             const stats = getDeckStats(deck)
             const isOpen = swipeOpen === deck.id
@@ -172,7 +172,7 @@ export default function Decks() {
               </View>
             )
           })}
-        </ScrollView>
+        </View>
       )}
 
       {/* FAB */}

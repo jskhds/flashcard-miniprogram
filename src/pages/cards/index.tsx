@@ -176,6 +176,15 @@ export default function Cards() {
 
                 <View className='card-swipe-actions'>
                   <View
+                    className='card-swipe-btn card-swipe-btn--edit'
+                    onClick={() => {
+                      setSwipeOpen(null)
+                      Taro.navigateTo({ url: `/pages/card-edit/index?deckId=${deckId}&cardId=${card.id}` })
+                    }}
+                  >
+                    <Text>编辑</Text>
+                  </View>
+                  <View
                     className='card-swipe-btn card-swipe-btn--delete'
                     onClick={() => handleDelete(card.id)}
                   >

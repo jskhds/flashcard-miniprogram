@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Taro from '@tarojs/taro'
 import { View, Text, Input } from '@tarojs/components'
-import { getDecks, saveDecks } from '../../utils/storage'
+import { getDecks, saveDecks, deleteDeck } from '../../utils/storage'
 import { getDisplayStatus, isDue, createDeck } from '../../utils/sm2'
-import { Deck, Card, DisplayStatus } from '../../types'
+import { Deck } from '../../types'
 import './index.scss'
 
 export default function Home() {
@@ -14,6 +14,9 @@ export default function Home() {
   const [newDeckName, setNewDeckName] = useState('')
   const [keyboardHeight, setKeyboardHeight] = useState(0)
   const [deckNameError, setDeckNameError] = useState('')
+  const [swipeOpen, setSwipeOpen] = useState<string | null>(null)
+  const [editingDeck, setEditingDeck] = useState<Deck | null>(null)
+  const touchStartX = useRef(0)
 
   useEffect(() => {
     loadData()
@@ -42,6 +45,39 @@ export default function Home() {
         setStreak(parsed.current || 0)
       }
     } catch {}
+  }
+
+  function handleTouchStart(e: any) {
+    touchStartX.current = e.touches[0].clientX
+  }
+
+  function handleTouchEnd(e: any, deckId: string) {
+    const dx = e.changedTouches[0].clientX - touchStartX.current
+    if (dx < -40) setSwipeOpen(deckId)
+    else if (dx > 40) setSwipeOpen(null)
+  }
+
+  function handleDeleteDeck(deck: Deck) {
+    Taro.showModal({
+      title: '删除卡组',
+      content: `确认删除「${deck.name}」？卡组内所有卡片将一并删除，无法恢复。`,
+      confirmText: '删除',
+      confirmColor: '#FF3B30',
+      success: (res) => {
+        if (res.confirm) {
+          deleteDeck(deck.id)
+          setSwipeOpen(null)
+          loadData()
+        }
+      }
+    })
+  }
+
+  function handleEditDeck(deck: Deck) {
+    setEditingDeck(deck)
+    setNewDeckName(deck.name)
+    setSwipeOpen(null)
+    setShowCreateModal(true)
   }
 
   function getTotalCards() {
@@ -77,17 +113,23 @@ export default function Home() {
       return
     }
     const allDecks = getDecks()
-    if (allDecks.some(d => d.name === name)) {
+    if (allDecks.some(d => d.name === name && d.id !== editingDeck?.id)) {
       setDeckNameError('已存在同名卡组')
       return
     }
-    allDecks.push(createDeck(name))
+    if (editingDeck) {
+      const idx = allDecks.findIndex(d => d.id === editingDeck.id)
+      if (idx !== -1) allDecks[idx].name = name
+    } else {
+      allDecks.push(createDeck(name))
+    }
     saveDecks(allDecks)
     setShowCreateModal(false)
     setNewDeckName('')
     setDeckNameError('')
+    setEditingDeck(null)
     loadData()
-    Taro.showToast({ title: '卡组创建成功', icon: 'success' })
+    Taro.showToast({ title: editingDeck ? '已更新' : '卡组创建成功', icon: 'success' })
   }
 
   const previewDecks = decks.slice(0, 3)
@@ -156,32 +198,51 @@ export default function Home() {
           {previewDecks.map(deck => {
             const rate = getDeckMasteredRate(deck)
             const dueCount = deck.cards.filter(c => isDue(c)).length
+            const isOpen = swipeOpen === deck.id
             return (
               <View
                 key={deck.id}
-                className='home-deck-card'
-                onClick={() => Taro.navigateTo({ url: `/pages/cards/index?deckId=${deck.id}` })}
+                className='home-deck-card-wrapper'
+                onTouchStart={handleTouchStart}
+                onTouchEnd={(e) => handleTouchEnd(e, deck.id)}
               >
-                <View className='home-deck-card__top'>
-                  <Text className='home-deck-card__name'>{deck.name}</Text>
-                  <View className='home-deck-card__meta'>
-                    <Text className='home-deck-card__count'>{deck.cards.length} 张</Text>
-                    {dueCount > 0 && (
-                      <View className='home-deck-card__due'>
-                        <Text className='home-deck-card__due-text'>{dueCount} 到期</Text>
-                      </View>
-                    )}
+                <View
+                  className={`home-deck-card ${isOpen ? 'home-deck-card--swiped' : ''}`}
+                  onClick={() => {
+                    if (isOpen) { setSwipeOpen(null); return }
+                    Taro.navigateTo({ url: `/pages/cards/index?deckId=${deck.id}` })
+                  }}
+                >
+                  <View className='home-deck-card__top'>
+                    <Text className='home-deck-card__name'>{deck.name}</Text>
+                    <View className='home-deck-card__meta'>
+                      <Text className='home-deck-card__count'>{deck.cards.length} 张</Text>
+                      {dueCount > 0 && (
+                        <View className='home-deck-card__due'>
+                          <Text className='home-deck-card__due-text'>{dueCount} 到期</Text>
+                        </View>
+                      )}
+                    </View>
+                  </View>
+
+                  <View className='home-deck-progress'>
+                    <View className='home-deck-progress__bar'>
+                      <View
+                        className='home-deck-progress__fill'
+                        style={{ width: `${rate}%` }}
+                      />
+                    </View>
+                    <Text className='home-deck-progress__label'>{rate}% 掌握</Text>
                   </View>
                 </View>
 
-                <View className='home-deck-progress'>
-                  <View className='home-deck-progress__bar'>
-                    <View
-                      className='home-deck-progress__fill'
-                      style={{ width: `${rate}%` }}
-                    />
+                <View className='home-deck-swipe-actions'>
+                  <View className='home-deck-swipe-btn home-deck-swipe-btn--edit' onClick={() => handleEditDeck(deck)}>
+                    <Text>编辑</Text>
                   </View>
-                  <Text className='home-deck-progress__label'>{rate}% 掌握</Text>
+                  <View className='home-deck-swipe-btn home-deck-swipe-btn--delete' onClick={() => handleDeleteDeck(deck)}>
+                    <Text>删除</Text>
+                  </View>
                 </View>
               </View>
             )
@@ -207,13 +268,13 @@ export default function Home() {
 
       {/* Create Deck Modal */}
       {showCreateModal && (
-        <View className='modal-overlay' onClick={() => { setShowCreateModal(false); setNewDeckName(''); setDeckNameError(''); setKeyboardHeight(0) }}>
+        <View className='modal-overlay' onClick={() => { setShowCreateModal(false); setNewDeckName(''); setDeckNameError(''); setKeyboardHeight(0); setEditingDeck(null) }}>
           <View
             className='modal-sheet'
             style={{ marginBottom: keyboardHeight ? `${keyboardHeight}px` : '0' }}
             onClick={e => e.stopPropagation()}
           >
-            <Text className='modal-title'>新建卡组</Text>
+            <Text className='modal-title'>{editingDeck ? '编辑卡组' : '新建卡组'}</Text>
             <Input
               className={`modal-input ${deckNameError ? 'modal-input--error' : ''}`}
               value={newDeckName}
@@ -228,7 +289,7 @@ export default function Home() {
             <View className='modal-actions'>
               <View
                 className='modal-btn modal-btn--cancel'
-                onClick={() => { setShowCreateModal(false); setNewDeckName(''); setDeckNameError(''); setKeyboardHeight(0) }}
+                onClick={() => { setShowCreateModal(false); setNewDeckName(''); setDeckNameError(''); setKeyboardHeight(0); setEditingDeck(null) }}
               >
                 <Text>取消</Text>
               </View>
@@ -236,7 +297,7 @@ export default function Home() {
                 className={`modal-btn modal-btn--confirm ${!newDeckName.trim() ? 'modal-btn--disabled' : ''}`}
                 onClick={handleCreateDeck}
               >
-                <Text>创建</Text>
+                <Text>{editingDeck ? '保存' : '创建'}</Text>
               </View>
             </View>
           </View>

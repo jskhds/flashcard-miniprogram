@@ -145,16 +145,59 @@
   font-weight: $font-weight-medium;
 }
 
+.home-deck-card-wrapper {
+  position: relative;
+  margin-bottom: $gap-sm;
+  border-radius: $radius-card;
+  overflow: hidden;
+}
+
 .home-deck-card {
+  position: relative;
+  z-index: 1;
   background: $bg-card;
   border-radius: $radius-card;
   padding: $gap-md $gap-lg;
-  margin-bottom: $gap-sm;
   box-shadow: $shadow-sm;
-  transition: opacity $transition-fast;
+  transition: transform 0.25s ease;
+
+  &--swiped {
+    transform: translateX(-192rpx);
+  }
+
+  &:active {
+    opacity: 0.9;
+  }
+}
+
+.home-deck-swipe-actions {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  z-index: 0;
+}
+
+.home-deck-swipe-btn {
+  width: 96rpx;
+  @include flex-center;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
 
   &:active {
     opacity: 0.8;
+  }
+
+  &--edit {
+    background: $bg-surface-2;
+    color: $text-primary;
+  }
+
+  &--delete {
+    background: $status-unknown;
+    color: $text-inverse;
+    border-radius: 0 $radius-card $radius-card 0;
   }
 }
 
