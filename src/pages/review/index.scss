@@ -1,0 +1,222 @@
+@import '../../styles/tokens.scss';
+
+.review-page {
+  min-height: 100vh;
+  background: $bg-base;
+  @include flex-col;
+  padding: $page-padding;
+  gap: $gap-lg;
+}
+
+.review-loading {
+  flex: 1;
+  @include flex-center;
+  color: $text-muted;
+  font-size: $font-size-base;
+}
+
+// ─── Progress ──────────────────────────────────────────────────────────────
+.review-progress {
+  display: flex;
+  align-items: center;
+  gap: $gap-md;
+}
+
+.review-progress__bar {
+  flex: 1;
+  height: 8rpx;
+  background: $bg-surface;
+  border-radius: $radius-full;
+  overflow: hidden;
+}
+
+.review-progress__fill {
+  height: 100%;
+  background: $accent;
+  border-radius: $radius-full;
+  transition: width 0.3s ease;
+}
+
+.review-progress__text {
+  font-size: $font-size-sm;
+  color: $text-muted;
+  white-space: nowrap;
+  min-width: 80rpx;
+  text-align: right;
+}
+
+// ─── Card ──────────────────────────────────────────────────────────────────
+.review-card-container {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 1200rpx;
+  min-height: 500rpx;
+}
+
+.review-card {
+  width: 100%;
+  min-height: 480rpx;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.4s ease;
+  cursor: pointer;
+
+  &--flipped {
+    transform: rotateY(180deg);
+  }
+
+  &--sliding {
+    transform: translateX(-120%) rotateY(0deg);
+    opacity: 0;
+    transition: transform 0.28s ease, opacity 0.28s ease;
+  }
+
+  &--flipped.review-card--sliding {
+    transform: translateX(-120%) rotateY(180deg);
+  }
+}
+
+.review-card__face {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  background: $bg-card;
+  border-radius: $radius-card;
+  padding: $gap-xl $gap-lg;
+  @include flex-col;
+  box-shadow: $shadow-md;
+}
+
+.review-card__front {
+  @include flex-col;
+  justify-content: space-between;
+}
+
+.review-card__back {
+  transform: rotateY(180deg);
+  @include flex-col;
+  justify-content: center;
+  gap: $gap-md;
+}
+
+.review-card__back-front {
+  padding: $gap-sm $gap-md;
+  background: $bg-surface;
+  border-radius: $radius-sm;
+}
+
+.review-card__divider {
+  height: 2rpx;
+  background: $border-color;
+  margin: $gap-sm 0;
+}
+
+.review-card__hint {
+  font-size: $font-size-sm;
+  color: $text-muted;
+  text-align: center;
+  font-style: italic;
+}
+
+.review-card__content {
+  font-size: $font-size-xl;
+  color: $text-primary;
+  font-weight: $font-weight-medium;
+  line-height: $line-height-relaxed;
+  text-align: center;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &--small {
+    font-size: $font-size-md;
+    color: $text-secondary;
+    font-weight: $font-weight-regular;
+    flex: 0;
+  }
+}
+
+// ─── Rating Buttons ────────────────────────────────────────────────────────
+.review-ratings {
+  @include flex-col;
+  gap: $gap-md;
+  padding-bottom: calc(#{$gap-lg} + env(safe-area-inset-bottom));
+}
+
+.review-ratings__label {
+  text-align: center;
+  font-size: $font-size-sm;
+  color: $text-muted;
+}
+
+.review-ratings__buttons {
+  display: flex;
+  gap: $gap-sm;
+}
+
+.review-rate-btn {
+  flex: 1;
+  @include flex-col;
+  align-items: center;
+  justify-content: center;
+  height: 120rpx;
+  border-radius: $radius-btn;
+  gap: 8rpx;
+  transition: opacity $transition-fast;
+
+  &:active {
+    opacity: 0.8;
+    transform: scale(0.97);
+  }
+
+  &--unknown {
+    background: rgba($status-unknown, 0.12);
+    border: 2rpx solid rgba($status-unknown, 0.3);
+
+    .review-rate-btn__icon { color: $status-unknown; }
+    .review-rate-btn__label { color: $status-unknown; }
+  }
+
+  &--fuzzy {
+    background: rgba($status-fuzzy, 0.12);
+    border: 2rpx solid rgba($status-fuzzy, 0.3);
+
+    .review-rate-btn__icon { color: $status-fuzzy; }
+    .review-rate-btn__label { color: $status-fuzzy; }
+  }
+
+  &--know {
+    background: rgba($status-know, 0.12);
+    border: 2rpx solid rgba($status-know, 0.3);
+
+    .review-rate-btn__icon { color: $status-know; }
+    .review-rate-btn__label { color: $status-know; }
+  }
+}
+
+.review-rate-btn__icon {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  line-height: 1;
+}
+
+.review-rate-btn__label {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+}
+
+// ─── Flip Hint ─────────────────────────────────────────────────────────────
+.review-flip-hint {
+  @include flex-center;
+  padding-bottom: calc(#{$gap-xl} + env(safe-area-inset-bottom));
+}
+
+.review-flip-hint__text {
+  font-size: $font-size-md;
+  color: $text-muted;
+  font-style: italic;
+}

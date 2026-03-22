@@ -1,0 +1,308 @@
+@import '../../styles/tokens.scss';
+
+.decks-page {
+  @include page-container;
+  @include flex-col;
+  gap: $gap-lg;
+  position: relative;
+}
+
+.decks-header {
+  @include flex-col;
+  gap: 4rpx;
+}
+
+.decks-title {
+  font-size: $font-size-2xl;
+  font-weight: $font-weight-bold;
+  color: $text-primary;
+  letter-spacing: -0.01em;
+}
+
+.decks-subtitle {
+  font-size: $font-size-md;
+  color: $text-muted;
+}
+
+// ─── Empty ─────────────────────────────────────────────────────────────────
+.decks-empty {
+  flex: 1;
+  @include flex-col;
+  align-items: center;
+  justify-content: center;
+  padding: $gap-xl 0;
+  gap: $gap-md;
+}
+
+.decks-empty__emoji {
+  font-size: 96rpx;
+}
+
+.decks-empty__title {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  color: $text-primary;
+}
+
+.decks-empty__desc {
+  font-size: $font-size-md;
+  color: $text-muted;
+  text-align: center;
+}
+
+// ─── List ──────────────────────────────────────────────────────────────────
+.decks-list {
+  flex: 1;
+  overflow: hidden;
+}
+
+// ─── Deck Item ─────────────────────────────────────────────────────────────
+.deck-item-wrapper {
+  position: relative;
+  margin-bottom: $gap-sm;
+  border-radius: $radius-card;
+  overflow: hidden;
+}
+
+.deck-item {
+  position: relative;
+  z-index: 1;
+  background: $bg-card;
+  border-radius: $radius-card;
+  transition: transform 0.25s ease;
+
+  &--swiped {
+    transform: translateX(-192rpx);
+  }
+
+  &:active {
+    opacity: 0.9;
+  }
+}
+
+.deck-item__content {
+  padding: $gap-md $gap-lg;
+  @include flex-col;
+  gap: $gap-sm;
+}
+
+.deck-item__top {
+  @include flex-between;
+}
+
+.deck-item__name {
+  font-size: $font-size-base;
+  font-weight: $font-weight-semibold;
+  color: $text-primary;
+  @include text-overflow;
+  max-width: 60%;
+}
+
+.deck-item__badges {
+  display: flex;
+  align-items: center;
+  gap: $gap-xs;
+}
+
+.deck-badge {
+  border-radius: $radius-full;
+  padding: 4rpx 16rpx;
+
+  &--due {
+    background: rgba($accent, 0.12);
+  }
+}
+
+.deck-badge__text {
+  font-size: $font-size-xs;
+  color: $accent;
+  font-weight: $font-weight-semibold;
+}
+
+.deck-item__count {
+  font-size: $font-size-sm;
+  color: $text-muted;
+}
+
+.deck-item__progress {
+  display: flex;
+  align-items: center;
+  gap: $gap-sm;
+}
+
+.deck-progress-bar {
+  flex: 1;
+  height: 8rpx;
+  background: $bg-surface;
+  border-radius: $radius-full;
+  overflow: hidden;
+}
+
+.deck-progress-bar__fill {
+  height: 100%;
+  background: $status-know;
+  border-radius: $radius-full;
+  transition: width 0.3s ease;
+  min-width: 4rpx;
+}
+
+.deck-item__rate {
+  font-size: $font-size-xs;
+  color: $text-muted;
+  white-space: nowrap;
+}
+
+.deck-item__footer {
+  @include flex-between;
+}
+
+.deck-item__footer-text {
+  font-size: $font-size-sm;
+  color: $text-secondary;
+}
+
+.deck-item__arrow {
+  font-size: $font-size-lg;
+  color: $text-muted;
+}
+
+// ─── Swipe Actions ─────────────────────────────────────────────────────────
+.deck-swipe-actions {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  z-index: 0;
+}
+
+.deck-swipe-btn {
+  width: 96rpx;
+  @include flex-center;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+
+  &:active {
+    opacity: 0.8;
+  }
+
+  &--edit {
+    background: $bg-surface-2;
+    color: $text-primary;
+  }
+
+  &--delete {
+    background: $status-unknown;
+    color: $text-inverse;
+    border-radius: 0 $radius-card $radius-card 0;
+  }
+}
+
+// ─── FAB ───────────────────────────────────────────────────────────────────
+.decks-fab {
+  position: fixed;
+  right: 40rpx;
+  bottom: 160rpx;
+  width: 96rpx;
+  height: 96rpx;
+  background: $accent;
+  border-radius: $radius-full;
+  @include flex-center;
+  box-shadow: $shadow-lg;
+  z-index: 100;
+
+  &:active {
+    opacity: 0.85;
+  }
+}
+
+.decks-fab__icon {
+  font-size: 56rpx;
+  color: $text-inverse;
+  line-height: 1;
+  margin-top: -4rpx;
+}
+
+// ─── Modal (shared) ────────────────────────────────────────────────────────
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(26, 22, 20, 0.4);
+  z-index: 1000;
+  display: flex;
+  align-items: flex-end;
+}
+
+.modal-sheet {
+  width: 100%;
+  background: $bg-base;
+  border-radius: $radius-card $radius-card 0 0;
+  padding: $gap-lg $page-padding;
+  padding-bottom: calc(#{$gap-lg} + env(safe-area-inset-bottom));
+  @include flex-col;
+  gap: $gap-md;
+}
+
+.modal-title {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-bold;
+  color: $text-primary;
+  text-align: center;
+  margin-bottom: $gap-sm;
+}
+
+.modal-input {
+  width: 100%;
+  display: block;
+  background: $bg-card;
+  border-radius: $radius-btn;
+  height: 88rpx;
+  line-height: 88rpx;
+  padding: 0 24rpx;
+  font-size: 32rpx;
+  color: $text-primary;
+  border: 2rpx solid $border-light;
+}
+
+.modal-input--error {
+  border-color: $status-unknown;
+}
+
+.modal-error {
+  font-size: $font-size-sm;
+  color: $status-unknown;
+  padding: 0 4rpx;
+}
+
+.modal-actions {
+  display: flex;
+  gap: $gap-sm;
+}
+
+.modal-btn {
+  flex: 1;
+  @include flex-center;
+  height: 88rpx;
+  border-radius: $radius-btn;
+  font-size: $font-size-base;
+  font-weight: $font-weight-semibold;
+
+  &:active {
+    opacity: 0.8;
+  }
+
+  &--cancel {
+    background: $bg-surface;
+    color: $text-secondary;
+  }
+
+  &--confirm {
+    background: $accent;
+    color: $text-inverse;
+
+    &.modal-btn--disabled {
+      background: $bg-surface-2;
+      color: $text-muted;
+    }
+  }
+}

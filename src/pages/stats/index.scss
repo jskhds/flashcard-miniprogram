@@ -1,0 +1,222 @@
+@import '../../styles/tokens.scss';
+
+.stats-page {
+  @include page-container;
+  @include flex-col;
+  gap: $gap-lg;
+}
+
+// ─── Header ────────────────────────────────────────────────────────────────
+.stats-header {
+  padding-top: $gap-sm;
+}
+
+.stats-title {
+  font-size: $font-size-2xl;
+  font-weight: $font-weight-bold;
+  color: $text-primary;
+  letter-spacing: -0.01em;
+}
+
+// ─── Toggle ────────────────────────────────────────────────────────────────
+.stats-toggle {
+  display: flex;
+  background: $bg-surface;
+  border-radius: $radius-btn;
+  padding: 4rpx;
+  gap: 4rpx;
+}
+
+.stats-toggle-btn {
+  flex: 1;
+  @include flex-center;
+  height: 64rpx;
+  border-radius: calc(#{$radius-btn} - 4rpx);
+  transition: background $transition-fast;
+
+  &:active {
+    opacity: 0.8;
+  }
+
+  &--active {
+    background: $accent;
+
+    .stats-toggle-btn__text {
+      color: $text-inverse;
+    }
+  }
+}
+
+.stats-toggle-btn__text {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: $text-secondary;
+}
+
+// ─── Overview ──────────────────────────────────────────────────────────────
+.stats-overview {
+  display: flex;
+  background: $bg-card;
+  border-radius: $radius-card;
+  padding: $gap-md $gap-lg;
+}
+
+.stats-overview-item {
+  flex: 1;
+  @include flex-col;
+  align-items: center;
+  gap: 4rpx;
+}
+
+.stats-overview-value {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  color: $text-primary;
+}
+
+.stats-overview-label {
+  font-size: $font-size-xs;
+  color: $text-muted;
+}
+
+.stats-overview-divider {
+  width: 2rpx;
+  height: 48rpx;
+  background: $border-color;
+  align-self: center;
+}
+
+// ─── Card ──────────────────────────────────────────────────────────────────
+.stats-card {
+  background: $bg-card;
+  border-radius: $radius-card;
+  padding: $gap-lg;
+  @include flex-col;
+  gap: $gap-md;
+}
+
+.stats-card-title {
+  font-size: $font-size-base;
+  font-weight: $font-weight-semibold;
+  color: $text-primary;
+}
+
+// ─── Chart ─────────────────────────────────────────────────────────────────
+.stats-chart {
+  @include flex-col;
+  gap: $gap-sm;
+}
+
+.stats-svg {
+  display: block;
+  width: 100%;
+}
+
+.stats-x-labels {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 4rpx;
+}
+
+.stats-x-label {
+  font-size: 18rpx;
+  color: $text-muted;
+}
+
+// ─── Deck Bars ─────────────────────────────────────────────────────────────
+.stats-deck-bars {
+  @include flex-col;
+  gap: $gap-md;
+}
+
+.stats-deck-bar-item {
+  @include flex-col;
+  gap: 6rpx;
+}
+
+.stats-deck-bar-label-row {
+  @include flex-between;
+}
+
+.stats-deck-bar-name {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $text-primary;
+  flex: 1;
+  @include text-overflow;
+  margin-right: $gap-sm;
+}
+
+.stats-deck-bar-pct {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-bold;
+  color: $text-primary;
+  min-width: 60rpx;
+  text-align: right;
+}
+
+.stats-deck-bar-track {
+  height: 12rpx;
+  background: $bg-surface;
+  border-radius: $radius-full;
+  overflow: hidden;
+}
+
+.stats-deck-bar-fill {
+  height: 100%;
+  background: $status-know;
+  border-radius: $radius-full;
+  transition: width 0.5s ease;
+  min-width: 4rpx;
+}
+
+.stats-deck-bar-sub {
+  font-size: $font-size-xs;
+  color: $text-muted;
+}
+
+// ─── Calendar ──────────────────────────────────────────────────────────────
+.stats-calendar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8rpx;
+}
+
+.stats-cal-header {
+  width: calc((100% - 48rpx) / 7);
+  @include flex-center;
+}
+
+.stats-cal-header-text {
+  font-size: $font-size-xs;
+  color: $text-muted;
+  font-weight: $font-weight-medium;
+}
+
+.stats-cal-cell {
+  width: calc((100% - 48rpx) / 7);
+  aspect-ratio: 1;
+  border-radius: $radius-xs;
+  @include flex-col;
+  align-items: center;
+  justify-content: center;
+  gap: 2rpx;
+
+  &--empty {
+    background: transparent;
+  }
+}
+
+.stats-cal-day {
+  font-size: 18rpx;
+  color: $text-secondary;
+  line-height: 1;
+  font-weight: $font-weight-medium;
+}
+
+.stats-cal-count {
+  font-size: 16rpx;
+  color: $text-inverse;
+  font-weight: $font-weight-bold;
+  line-height: 1;
+}

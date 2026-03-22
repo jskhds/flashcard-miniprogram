@@ -1,0 +1,145 @@
+// ─── Colors ────────────────────────────────────────────────────────────────
+$bg-base: #FFF8F0;
+$bg-card: #FDECD7;
+$bg-surface: #F2E8DB;
+$bg-surface-2: #EDE0D0;
+$accent: #F4845F;
+$accent-dark: #D96840;
+$accent-light: #FAC4AE;
+
+$text-primary: #1A1614;
+$text-secondary: #7A6A5E;
+$text-muted: #A0907E;
+$text-inverse: #FFFFFF;
+
+$status-know: #34C759;
+$status-fuzzy: #FF9500;
+$status-unknown: #FF3B30;
+$status-new: #C7C7CC;
+
+$border-color: #E8D8C8;
+$border-light: #F0E4D4;
+
+// ─── Radius ────────────────────────────────────────────────────────────────
+$radius-xs: 8rpx;
+$radius-sm: 16rpx;
+$radius-card: 32rpx;
+$radius-btn: 24rpx;
+$radius-chip: 32rpx;
+$radius-full: 9999rpx;
+
+// ─── Spacing ───────────────────────────────────────────────────────────────
+$page-padding: 40rpx;
+$gap-xs: 8rpx;
+$gap-sm: 16rpx;
+$gap-md: 24rpx;
+$gap-lg: 40rpx;
+$gap-xl: 64rpx;
+
+// ─── Typography ────────────────────────────────────────────────────────────
+$font-size-xs: 20rpx;    // 10px
+$font-size-sm: 24rpx;    // 12px
+$font-size-md: 28rpx;    // 14px
+$font-size-base: 32rpx;  // 16px
+$font-size-lg: 36rpx;    // 18px
+$font-size-xl: 48rpx;    // 24px
+$font-size-2xl: 64rpx;   // 32px
+$font-size-hero: 96rpx;  // 48px
+
+$font-weight-regular: 400;
+$font-weight-medium: 500;
+$font-weight-semibold: 600;
+$font-weight-bold: 700;
+
+$line-height-tight: 1.2;
+$line-height-base: 1.5;
+$line-height-relaxed: 1.7;
+
+// ─── Shadows ───────────────────────────────────────────────────────────────
+$shadow-sm: 0 2rpx 8rpx rgba(26, 22, 20, 0.06);
+$shadow-md: 0 4rpx 16rpx rgba(26, 22, 20, 0.08);
+$shadow-lg: 0 8rpx 32rpx rgba(26, 22, 20, 0.12);
+$shadow-card: 0 4rpx 24rpx rgba(244, 132, 95, 0.12);
+
+// ─── Transitions ───────────────────────────────────────────────────────────
+$transition-fast: 0.15s ease;
+$transition-base: 0.25s ease;
+$transition-slow: 0.4s ease;
+
+// ─── Mixins ────────────────────────────────────────────────────────────────
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@mixin flex-col {
+  display: flex;
+  flex-direction: column;
+}
+
+@mixin card-base {
+  background: $bg-card;
+  border-radius: $radius-card;
+  padding: $gap-lg;
+}
+
+@mixin btn-primary {
+  background: $accent;
+  color: $text-inverse;
+  border-radius: $radius-btn;
+  font-size: $font-size-base;
+  font-weight: $font-weight-semibold;
+  border: none;
+  cursor: pointer;
+  transition: opacity $transition-fast;
+
+  &:active {
+    opacity: 0.85;
+  }
+}
+
+@mixin btn-secondary {
+  background: $bg-surface;
+  color: $text-primary;
+  border-radius: $radius-btn;
+  font-size: $font-size-base;
+  font-weight: $font-weight-medium;
+  border: none;
+  cursor: pointer;
+  transition: opacity $transition-fast;
+
+  &:active {
+    opacity: 0.75;
+  }
+}
+
+@mixin status-chip($color) {
+  display: inline-flex;
+  align-items: center;
+  padding: 4rpx 16rpx;
+  border-radius: $radius-chip;
+  background: rgba($color, 0.12);
+  color: $color;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+}
+
+@mixin text-overflow {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+@mixin page-container {
+  min-height: 100vh;
+  background: $bg-base;
+  padding: $page-padding;
+}

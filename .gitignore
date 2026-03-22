@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+
+# Taro cache
+.swc/
+
+# Build output
+dist/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+
+# WeChat DevTools
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# Local env
+.env
+.env.local

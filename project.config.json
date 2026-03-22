@@ -1,0 +1,17 @@
+{
+  "miniprogramRoot": "dist/",
+  "projectname": "flashcard",
+  "appid": "wxee0789ea40ea669b",
+  "description": "闪卡学习小程序",
+  "setting": {
+    "es6": false,
+    "postcss": false,
+    "minified": false,
+    "urlCheck": false,
+    "enhance": false,
+    "useCompilerPlugins": false,
+    "coverView": true
+  },
+  "compileType": "miniprogram",
+  "condition": {}
+}

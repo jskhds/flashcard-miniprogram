@@ -1,0 +1,265 @@
+@import '../../styles/tokens.scss';
+
+.cards-page {
+  @include page-container;
+  @include flex-col;
+  gap: $gap-md;
+  padding-bottom: 180rpx;
+}
+
+// ─── Header ────────────────────────────────────────────────────────────────
+.cards-header {
+  @include flex-col;
+  gap: 4rpx;
+}
+
+.cards-deck-name {
+  font-size: $font-size-2xl;
+  font-weight: $font-weight-bold;
+  color: $text-primary;
+  letter-spacing: -0.01em;
+}
+
+.cards-total {
+  font-size: $font-size-md;
+  color: $text-muted;
+}
+
+// ─── Stats ─────────────────────────────────────────────────────────────────
+.cards-stats {
+  display: flex;
+  background: $bg-card;
+  border-radius: $radius-card;
+  padding: $gap-md $gap-lg;
+  gap: 0;
+}
+
+.cards-stat-item {
+  flex: 1;
+  @include flex-col;
+  align-items: center;
+  gap: 6rpx;
+}
+
+.cards-stat-dot {
+  width: 16rpx;
+  height: 16rpx;
+  border-radius: $radius-full;
+}
+
+.cards-stat-count {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  color: $text-primary;
+  line-height: 1.2;
+}
+
+.cards-stat-label {
+  font-size: $font-size-xs;
+  color: $text-muted;
+}
+
+// ─── Filters ───────────────────────────────────────────────────────────────
+.cards-filters {
+  white-space: nowrap;
+}
+
+.cards-filter-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 10rpx 24rpx;
+  border-radius: $radius-full;
+  background: $bg-surface;
+  margin-right: $gap-sm;
+
+  &--active {
+    background: $accent;
+
+    .cards-filter-chip__text {
+      color: $text-inverse;
+    }
+  }
+
+  &:active {
+    opacity: 0.75;
+  }
+}
+
+.cards-filter-chip__text {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: $text-secondary;
+  white-space: nowrap;
+}
+
+// ─── Empty ─────────────────────────────────────────────────────────────────
+.cards-empty {
+  flex: 1;
+  @include flex-center;
+  padding: $gap-xl;
+}
+
+.cards-empty__text {
+  font-size: $font-size-md;
+  color: $text-muted;
+}
+
+// ─── Card List ─────────────────────────────────────────────────────────────
+.cards-list {
+  flex: 1;
+}
+
+.card-item-wrapper {
+  position: relative;
+  margin-bottom: $gap-sm;
+  border-radius: $radius-card;
+  overflow: hidden;
+}
+
+.card-item {
+  position: relative;
+  z-index: 1;
+  background: $bg-card;
+  border-radius: $radius-card;
+  transition: transform 0.25s ease;
+
+  &--swiped {
+    transform: translateX(-96rpx);
+  }
+
+  &:active {
+    opacity: 0.9;
+  }
+}
+
+.card-item__content {
+  padding: $gap-md $gap-lg;
+  @include flex-col;
+  gap: $gap-xs;
+}
+
+.card-item__header {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  margin-bottom: 4rpx;
+}
+
+.card-item__status-dot {
+  width: 12rpx;
+  height: 12rpx;
+  border-radius: $radius-full;
+  flex-shrink: 0;
+}
+
+.card-item__status-text {
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
+}
+
+.card-item__due-badge {
+  background: rgba($accent, 0.12);
+  border-radius: $radius-full;
+  padding: 2rpx 12rpx;
+}
+
+.card-item__due-text {
+  font-size: $font-size-xs;
+  color: $accent;
+  font-weight: $font-weight-medium;
+}
+
+.card-item__front {
+  font-size: $font-size-base;
+  font-weight: $font-weight-medium;
+  color: $text-primary;
+  line-height: $line-height-base;
+}
+
+.card-item__back {
+  font-size: $font-size-sm;
+  color: $text-muted;
+  line-height: $line-height-base;
+}
+
+// ─── Swipe Actions ─────────────────────────────────────────────────────────
+.card-swipe-actions {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  z-index: 0;
+}
+
+.card-swipe-btn {
+  width: 96rpx;
+  @include flex-center;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+
+  &:active {
+    opacity: 0.8;
+  }
+
+  &--delete {
+    background: $status-unknown;
+    color: $text-inverse;
+    border-radius: 0 $radius-card $radius-card 0;
+  }
+}
+
+// ─── Bottom Buttons ────────────────────────────────────────────────────────
+.cards-bottom {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: $gap-md $page-padding;
+  padding-bottom: calc(#{$gap-md} + env(safe-area-inset-bottom));
+  background: $bg-base;
+  border-top: 2rpx solid $border-light;
+  display: flex;
+  gap: $gap-sm;
+}
+
+.cards-btn {
+  @include flex-center;
+  height: 88rpx;
+  border-radius: $radius-btn;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+
+  &:active {
+    opacity: 0.8;
+  }
+
+  &--secondary {
+    flex: 0 0 auto;
+    padding: 0 $gap-lg;
+    background: $bg-surface;
+  }
+
+  &--primary {
+    flex: 1;
+    background: $accent;
+    box-shadow: $shadow-card;
+  }
+
+  &--disabled {
+    background: $bg-surface-2;
+    box-shadow: none;
+
+    .cards-btn__text {
+      color: $text-muted;
+    }
+  }
+}
+
+.cards-btn__text {
+  color: $text-primary;
+
+  .cards-btn--primary & {
+    color: $text-inverse;
+  }
+}
