@@ -2,16 +2,11 @@ import { useState, useEffect } from 'react'
 import Taro from '@tarojs/taro'
 import { View, Text } from '@tarojs/components'
 import { updateStreak, setReviewSession } from '@/utils/storage'
-import { Card, ReviewQuality } from '@/types'
+import { Card, ReviewResult } from '@/types'
 import SummaryHeader from './components/SummaryHeader'
 import SummaryBreakdown from './components/SummaryBreakdown'
 import SummaryActions from './components/SummaryActions'
 import './index.scss'
-
-interface ReviewResult {
-  cardId: string
-  quality: ReviewQuality
-}
 
 interface SummaryData {
   results: ReviewResult[]

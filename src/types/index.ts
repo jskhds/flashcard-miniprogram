@@ -38,3 +38,8 @@ export interface ReviewSession {
 
 // 复习评分：0=不会, 3=模糊, 5=掌握
 export type ReviewQuality = 0 | 3 | 5
+
+export interface ReviewResult {
+  cardId: string
+  quality: ReviewQuality
+}

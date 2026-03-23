@@ -3,16 +3,11 @@ import Taro from '@tarojs/taro'
 import { View, Text } from '@tarojs/components'
 import { getReviewSession, clearReviewSession, getDecks, saveDecks, addReviewRecord, getTodayStr } from '@/utils/storage'
 import { calculateNextReview } from '@/utils/sm2'
-import { Card, ReviewQuality } from '@/types'
+import { Card, ReviewQuality, ReviewResult } from '@/types'
 import ReviewProgress from './components/ReviewProgress'
 import ReviewCard from './components/ReviewCard'
 import RatingButtons from './components/RatingButtons'
 import './index.scss'
-
-interface ReviewResult {
-  cardId: string
-  quality: ReviewQuality
-}
 
 export default function Review() {
   const [cards, setCards] = useState<Card[]>([])
