@@ -40,7 +40,7 @@ export default function Review() {
     setResults(newResults)
 
     const allDecks = getDecks()
-    const deck = allDecks.find(d => d.id === deckId || d.cards.some(c => c.id === currentCard.id))
+    const deck = allDecks.find(d => d.cards.some(c => c.id === currentCard.id))
     if (deck) {
       const cardIdx = deck.cards.findIndex(c => c.id === currentCard.id)
       if (cardIdx !== -1) deck.cards[cardIdx] = updatedCard
