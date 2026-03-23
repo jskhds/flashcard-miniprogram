@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import Taro from '@tarojs/taro'
 import { View } from '@tarojs/components'
-import { getDecks, setReviewSession } from '@/utils/storage'
+import { getDecks, setReviewSession, getStreak } from '@/utils/storage'
 import { isDue } from '@/utils/sm2'
 import { Deck } from '@/types'
 import { useDeckCRUD } from '@/hooks/useDeckCRUD'
@@ -14,8 +14,6 @@ export default function Home() {
   const [decks, setDecks] = useState<Deck[]>([])
   const [todayCount, setTodayCount] = useState(0)
   const [streak, setStreak] = useState(0)
-
-  useEffect(() => { loadData() }, [])
 
   const {
     showModal, editingDeck, modalName, nameError,
@@ -30,10 +28,7 @@ export default function Home() {
     setDecks(allDecks)
     const dueCount = allDecks.reduce((sum, d) => sum + d.cards.filter(c => isDue(c)).length, 0)
     setTodayCount(dueCount)
-    try {
-      const streakData = Taro.getStorageSync('flashcard_streak')
-      if (streakData) setStreak(JSON.parse(streakData).current || 0)
-    } catch {}
+    setStreak(getStreak().current)
   }
 
   function handleStartReview() {
