@@ -5,7 +5,8 @@ const KEYS = {
   DECKS: 'flashcard_decks',
   REVIEW_HISTORY: 'flashcard_review_history',
   STREAK: 'flashcard_streak',
-  REVIEW_SESSION: 'flashcard_review_session'
+  REVIEW_SESSION: 'flashcard_review_session',
+  SUMMARY_RESULTS: 'flashcard_summary_results'
 }
 
 // ─── Decks ───────────────────────────────────────────────────────────────────
@@ -131,6 +132,31 @@ export function getReviewSession<T = any>(): T | null {
 export function clearReviewSession(): void {
   try {
     Taro.removeStorageSync(KEYS.REVIEW_SESSION)
+  } catch {}
+}
+
+// ─── Summary Results (临时中转) ────────────────────────────────────────────────
+
+export function setSummaryResults(data: any): void {
+  try {
+    Taro.setStorageSync(KEYS.SUMMARY_RESULTS, JSON.stringify(data))
+  } catch (e) {
+    console.error('setSummaryResults error', e)
+  }
+}
+
+export function getSummaryResults<T = any>(): T | null {
+  try {
+    const data = Taro.getStorageSync(KEYS.SUMMARY_RESULTS)
+    return data ? JSON.parse(data) : null
+  } catch {
+    return null
+  }
+}
+
+export function clearSummaryResults(): void {
+  try {
+    Taro.removeStorageSync(KEYS.SUMMARY_RESULTS)
   } catch {}
 }
 

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import Taro from '@tarojs/taro'
 import { View, Text } from '@tarojs/components'
-import { getReviewSession, clearReviewSession, getDecks, saveDecks, addReviewRecord, getTodayStr } from '@/utils/storage'
+import { getReviewSession, clearReviewSession, getDecks, saveDecks, addReviewRecord, getTodayStr, setSummaryResults } from '@/utils/storage'
 import { calculateNextReview } from '@/utils/sm2'
 import { Card, ReviewQuality, ReviewResult } from '@/types'
 import ReviewProgress from './components/ReviewProgress'
@@ -58,11 +58,7 @@ export default function Review() {
       addReviewRecord(getTodayStr(), newResults.length)
       setIsSliding(true)
       setTimeout(() => {
-        Taro.setStorageSync('flashcard_summary_results', JSON.stringify({
-          results: newResults,
-          deckId,
-          cards
-        }))
+        setSummaryResults({ results: newResults, deckId, cards })
         Taro.redirectTo({ url: '/pages/review-summary/index' })
       }, 300)
     }

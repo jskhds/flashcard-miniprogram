@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import Taro from '@tarojs/taro'
 import { View, Text } from '@tarojs/components'
-import { updateStreak, setReviewSession } from '@/utils/storage'
+import { updateStreak, setReviewSession, getSummaryResults, clearSummaryResults } from '@/utils/storage'
 import { Card, ReviewResult } from '@/types'
 import SummaryHeader from './components/SummaryHeader'
 import SummaryBreakdown from './components/SummaryBreakdown'
@@ -19,10 +19,10 @@ export default function ReviewSummary() {
   const [streak, setStreak] = useState(0)
 
   useEffect(() => {
-    const raw = Taro.getStorageSync('flashcard_summary_results')
+    const raw = getSummaryResults<SummaryData>()
     if (raw) {
-      setData(JSON.parse(raw))
-      Taro.removeStorageSync('flashcard_summary_results')
+      setData(raw)
+      clearSummaryResults()
     }
     setStreak(updateStreak().current)
   }, [])
