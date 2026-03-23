@@ -1,20 +1,13 @@
 import Taro from '@tarojs/taro'
 import { View, Text, ScrollView } from '@tarojs/components'
 import { Card, DisplayStatus } from '../../../types'
-import { getDisplayStatus, isDue } from '../../../utils/sm2'
+import { getDisplayStatus, isDue, getStatusColor } from '../../../utils/sm2'
 import { useSwipeGesture } from '../../../hooks/useSwipeGesture'
 
 interface CardListProps {
   cards: Card[]
   deckId: string
   onDelete: (cardId: string) => void
-}
-
-function getStatusColor(s: DisplayStatus) {
-  if (s === '掌握') return '#34C759'
-  if (s === '模糊') return '#FF9500'
-  if (s === '不会') return '#FF3B30'
-  return '#C7C7CC'
 }
 
 export default function CardList({ cards, deckId, onDelete }: CardListProps) {

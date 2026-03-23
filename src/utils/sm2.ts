@@ -98,6 +98,16 @@ export function createCard(front: string, back: string): Card {
 }
 
 /**
+ * 将展示状态映射为对应颜色
+ */
+export function getStatusColor(status: DisplayStatus): string {
+  if (status === '掌握') return '#34C759'
+  if (status === '模糊') return '#FF9500'
+  if (status === '不会') return '#FF3B30'
+  return '#C7C7CC'
+}
+
+/**
  * 创建新卡组
  */
 export function createDeck(name: string) {
