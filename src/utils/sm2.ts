@@ -84,16 +84,17 @@ export function isDue(card: Card): boolean {
  * 创建新卡片默认值
  */
 export function createCard(front: string, back: string): Card {
+  const now = Date.now()
   return {
-    id: `card_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`,
+    id: `card_${now}_${Math.random().toString(36).slice(2, 8)}`,
     front,
     back,
     ease: 2.5,
     interval: 1,
     repetitions: 0,
-    nextReview: Date.now(),
+    nextReview: now,
     status: 'new',
-    createdAt: Date.now()
+    createdAt: now
   }
 }
 
