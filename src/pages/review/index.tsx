@@ -33,7 +33,7 @@ export default function Review() {
   const progress = cards.length > 0 ? (currentIndex / cards.length) * 100 : 0
 
   function handleRate(quality: ReviewQuality) {
-    if (!currentCard) return
+    if (!currentCard || isSliding) return
 
     const updatedCard = calculateNextReview(currentCard, quality)
     const newResults = [...results, { cardId: currentCard.id, quality }]
