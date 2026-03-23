@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react'
 import Taro from '@tarojs/taro'
 import { View } from '@tarojs/components'
-import { getDecks, saveDecks, deleteDeck, setReviewSession } from '@/utils/storage'
-import { isDue, createDeck } from '@/utils/sm2'
+import { getDecks, setReviewSession } from '@/utils/storage'
+import { isDue } from '@/utils/sm2'
 import { Deck } from '@/types'
+import { useDeckCRUD } from '@/hooks/useDeckCRUD'
 import TodayStats from './components/TodayStats'
 import DeckOverview from './components/DeckOverview'
 import DeckNameModal from '@/components/DeckNameModal'
@@ -13,12 +14,14 @@ export default function Home() {
   const [decks, setDecks] = useState<Deck[]>([])
   const [todayCount, setTodayCount] = useState(0)
   const [streak, setStreak] = useState(0)
-  const [showModal, setShowModal] = useState(false)
-  const [modalName, setModalName] = useState('')
-  const [nameError, setNameError] = useState('')
-  const [editingDeck, setEditingDeck] = useState<Deck | null>(null)
 
   useEffect(() => { loadData() }, [])
+
+  const {
+    showModal, editingDeck, modalName, nameError,
+    setModalName, setNameError,
+    openCreate, openEdit, closeModal, handleSave, handleDelete,
+  } = useDeckCRUD(loadData)
 
   Taro.useDidShow(() => { loadData() })
 
@@ -46,62 +49,6 @@ export default function Home() {
     }
     setReviewSession(session)
     Taro.navigateTo({ url: '/pages/review/index' })
-  }
-
-  function openCreate() {
-    setEditingDeck(null)
-    setModalName('')
-    setNameError('')
-    setShowModal(true)
-  }
-
-  function openEdit(deck: Deck) {
-    setEditingDeck(deck)
-    setModalName(deck.name)
-    setNameError('')
-    setShowModal(true)
-  }
-
-  function closeModal() {
-    setShowModal(false)
-    setModalName('')
-    setNameError('')
-    setEditingDeck(null)
-  }
-
-  function handleSave() {
-    const name = modalName.trim()
-    if (!name) { setNameError('请输入卡组名称'); return }
-    const allDecks = getDecks()
-    if (allDecks.some(d => d.name === name && d.id !== editingDeck?.id)) {
-      setNameError('已存在同名卡组')
-      return
-    }
-    if (editingDeck) {
-      const idx = allDecks.findIndex(d => d.id === editingDeck.id)
-      if (idx !== -1) allDecks[idx].name = name
-    } else {
-      allDecks.push(createDeck(name))
-    }
-    saveDecks(allDecks)
-    closeModal()
-    loadData()
-    Taro.showToast({ title: editingDeck ? '已更新' : '卡组创建成功', icon: 'success' })
-  }
-
-  function handleDelete(deck: Deck) {
-    Taro.showModal({
-      title: '删除卡组',
-      content: `确认删除「${deck.name}」？卡组内所有卡片将一并删除，无法恢复。`,
-      confirmText: '删除',
-      confirmColor: '#FF3B30',
-      success: (res) => {
-        if (res.confirm) {
-          deleteDeck(deck.id)
-          loadData()
-        }
-      }
-    })
   }
 
   return (
