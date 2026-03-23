@@ -1,4 +1,4 @@
-import { Card, ReviewQuality, DisplayStatus } from '@/types'
+import { Card, Deck, ReviewQuality, DisplayStatus } from '@/types'
 
 /**
  * SM-2 间隔重复算法
@@ -95,6 +95,17 @@ export function createCard(front: string, back: string): Card {
     status: 'new',
     createdAt: Date.now()
   }
+}
+
+/**
+ * 计算卡组统计信息
+ */
+export function getDeckStats(deck: Deck) {
+  const total = deck.cards.length
+  if (total === 0) return { total, mastered: 0, rate: 0, due: 0 }
+  const mastered = deck.cards.filter(c => getDisplayStatus(c) === '掌握').length
+  const due = deck.cards.filter(c => isDue(c)).length
+  return { total, mastered, rate: Math.round((mastered / total) * 100), due }
 }
 
 /**

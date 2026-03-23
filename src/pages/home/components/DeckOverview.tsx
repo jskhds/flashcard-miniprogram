@@ -1,7 +1,7 @@
 import Taro from '@tarojs/taro'
 import { View, Text } from '@tarojs/components'
 import { Deck } from '@/types'
-import { isDue, getDisplayStatus } from '@/utils/sm2'
+import { getDeckStats } from '@/utils/sm2'
 import ProgressBar from '@/components/ProgressBar'
 import { useSwipeGesture } from '@/hooks/useSwipeGesture'
 
@@ -10,12 +10,6 @@ interface DeckOverviewProps {
   onEdit: (deck: Deck) => void
   onDelete: (deck: Deck) => void
   onCreateDeck: () => void
-}
-
-function getMasteredRate(deck: Deck) {
-  if (deck.cards.length === 0) return 0
-  const mastered = deck.cards.filter(c => getDisplayStatus(c) === '掌握').length
-  return Math.round((mastered / deck.cards.length) * 100)
 }
 
 export default function DeckOverview({ decks, onEdit, onDelete, onCreateDeck }: DeckOverviewProps) {
@@ -49,8 +43,7 @@ export default function DeckOverview({ decks, onEdit, onDelete, onCreateDeck }: 
       </View>
 
       {previewDecks.map(deck => {
-        const rate = getMasteredRate(deck)
-        const dueCount = deck.cards.filter(c => isDue(c)).length
+        const { rate, due: dueCount } = getDeckStats(deck)
         const isOpen = swipeOpen === deck.id
         return (
           <View
