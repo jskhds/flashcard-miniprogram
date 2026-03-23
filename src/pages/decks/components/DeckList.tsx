@@ -1,9 +1,9 @@
-import { useState, useRef } from 'react'
 import Taro from '@tarojs/taro'
 import { View, Text } from '@tarojs/components'
 import { Deck } from '../../../types'
 import { getDisplayStatus, isDue } from '../../../utils/sm2'
 import ProgressBar from '../../../components/ProgressBar'
+import { useSwipeGesture } from '../../../hooks/useSwipeGesture'
 
 interface DeckListProps {
   decks: Deck[]
@@ -20,18 +20,7 @@ function getDeckStats(deck: Deck) {
 }
 
 export default function DeckList({ decks, onEdit, onDelete }: DeckListProps) {
-  const [swipeOpen, setSwipeOpen] = useState<string | null>(null)
-  const touchStartX = useRef<number>(0)
-
-  function handleTouchStart(e: any) {
-    touchStartX.current = e.touches[0].clientX
-  }
-
-  function handleTouchEnd(e: any, deckId: string) {
-    const dx = e.changedTouches[0].clientX - touchStartX.current
-    if (dx < -40) setSwipeOpen(deckId)
-    else if (dx > 40) setSwipeOpen(null)
-  }
+  const { swipeOpen, setSwipeOpen, handleTouchStart, handleTouchEnd } = useSwipeGesture()
 
   if (decks.length === 0) {
     return (

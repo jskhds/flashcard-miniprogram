@@ -1,8 +1,8 @@
-import { useState, useRef } from 'react'
 import Taro from '@tarojs/taro'
 import { View, Text, ScrollView } from '@tarojs/components'
 import { Card, DisplayStatus } from '../../../types'
 import { getDisplayStatus, isDue } from '../../../utils/sm2'
+import { useSwipeGesture } from '../../../hooks/useSwipeGesture'
 
 interface CardListProps {
   cards: Card[]
@@ -18,18 +18,7 @@ function getStatusColor(s: DisplayStatus) {
 }
 
 export default function CardList({ cards, deckId, onDelete }: CardListProps) {
-  const [swipeOpen, setSwipeOpen] = useState<string | null>(null)
-  const touchStartX = useRef<number>(0)
-
-  function handleTouchStart(e: any) {
-    touchStartX.current = e.touches[0].clientX
-  }
-
-  function handleTouchEnd(e: any, cardId: string) {
-    const dx = e.changedTouches[0].clientX - touchStartX.current
-    if (dx < -40) setSwipeOpen(cardId)
-    else if (dx > 40) setSwipeOpen(null)
-  }
+  const { swipeOpen, setSwipeOpen, handleTouchStart, handleTouchEnd } = useSwipeGesture()
 
   if (cards.length === 0) {
     return (
