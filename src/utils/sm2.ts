@@ -1,4 +1,4 @@
-import { Card, ReviewQuality, DisplayStatus } from '../types'
+import { Card, ReviewQuality, DisplayStatus } from '@/types'
 
 /**
  * SM-2 间隔重复算法

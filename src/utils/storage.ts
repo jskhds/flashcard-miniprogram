@@ -1,5 +1,5 @@
 import Taro from '@tarojs/taro'
-import { Deck, ReviewRecord, StreakData } from '../types'
+import { Deck, ReviewRecord, StreakData } from '@/types'
 
 const KEYS = {
   DECKS: 'flashcard_decks',

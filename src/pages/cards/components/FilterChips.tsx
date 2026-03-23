@@ -1,5 +1,5 @@
 import { View, Text, ScrollView } from '@tarojs/components'
-import { DisplayStatus } from '../../../types'
+import { DisplayStatus } from '@/types'
 
 type FilterType = '全部' | DisplayStatus
 

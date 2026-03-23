@@ -1,5 +1,5 @@
 import { View, Text } from '@tarojs/components'
-import { ReviewQuality } from '../../../types'
+import { ReviewQuality } from '@/types'
 
 interface RatingButtonsProps {
   onRate: (quality: ReviewQuality) => void

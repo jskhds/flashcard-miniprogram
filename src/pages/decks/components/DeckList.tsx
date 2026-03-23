@@ -1,9 +1,9 @@
 import Taro from '@tarojs/taro'
 import { View, Text } from '@tarojs/components'
-import { Deck } from '../../../types'
-import { getDisplayStatus, isDue } from '../../../utils/sm2'
-import ProgressBar from '../../../components/ProgressBar'
-import { useSwipeGesture } from '../../../hooks/useSwipeGesture'
+import { Deck } from '@/types'
+import { getDisplayStatus, isDue } from '@/utils/sm2'
+import ProgressBar from '@/components/ProgressBar'
+import { useSwipeGesture } from '@/hooks/useSwipeGesture'
 
 interface DeckListProps {
   decks: Deck[]

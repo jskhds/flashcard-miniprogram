@@ -1,6 +1,6 @@
 import { View, Text } from '@tarojs/components'
-import { DisplayStatus } from '../../../types'
-import { getStatusColor } from '../../../utils/sm2'
+import { DisplayStatus } from '@/types'
+import { getStatusColor } from '@/utils/sm2'
 
 interface CardStatsProps {
   statusCounts: Record<string, number>

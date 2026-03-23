@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import Taro, { useRouter } from '@tarojs/taro'
-import { getDeckById, saveDecks, getDecks } from '../../utils/storage'
-import { createCard } from '../../utils/sm2'
+import { getDeckById, saveDecks, getDecks } from '@/utils/storage'
+import { createCard } from '@/utils/sm2'
 import CardEditForm from './components/CardEditForm'
 
 export default function CardEdit() {

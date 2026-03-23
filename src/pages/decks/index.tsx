@@ -1,11 +1,11 @@
 import { useState } from 'react'
 import Taro from '@tarojs/taro'
 import { View, Text } from '@tarojs/components'
-import { getDecks, saveDecks, deleteDeck } from '../../utils/storage'
-import { createDeck } from '../../utils/sm2'
-import { Deck } from '../../types'
+import { getDecks, saveDecks, deleteDeck } from '@/utils/storage'
+import { createDeck } from '@/utils/sm2'
+import { Deck } from '@/types'
 import DeckList from './components/DeckList'
-import DeckNameModal from '../../components/DeckNameModal'
+import DeckNameModal from '@/components/DeckNameModal'
 import './index.scss'
 
 export default function Decks() {

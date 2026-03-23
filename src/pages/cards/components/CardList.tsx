@@ -1,8 +1,8 @@
 import Taro from '@tarojs/taro'
 import { View, Text, ScrollView } from '@tarojs/components'
-import { Card, DisplayStatus } from '../../../types'
-import { getDisplayStatus, isDue, getStatusColor } from '../../../utils/sm2'
-import { useSwipeGesture } from '../../../hooks/useSwipeGesture'
+import { Card, DisplayStatus } from '@/types'
+import { getDisplayStatus, isDue, getStatusColor } from '@/utils/sm2'
+import { useSwipeGesture } from '@/hooks/useSwipeGesture'
 
 interface CardListProps {
   cards: Card[]

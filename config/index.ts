@@ -1,6 +1,10 @@
 import { defineConfig, type UserConfigExport } from '@tarojs/cli'
+import path from 'path'
 
 export default defineConfig<'weapp'>({
+  alias: {
+    '@': path.resolve(__dirname, '..', 'src')
+  },
   projectName: 'flashcard-miniprogram',
   date: '2026-03-21',
   designWidth: 750,

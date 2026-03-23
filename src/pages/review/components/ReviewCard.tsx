@@ -1,5 +1,5 @@
 import { View, Text } from '@tarojs/components'
-import { Card } from '../../../types'
+import { Card } from '@/types'
 
 interface ReviewCardProps {
   card: Card
