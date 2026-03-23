@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { View, Text, Input } from '@tarojs/components'
+import './index.scss'
 
 interface DeckNameModalProps {
   title: string
