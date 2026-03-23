@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import Taro from '@tarojs/taro'
 import { View } from '@tarojs/components'
-import { getDecks, saveDecks, deleteDeck } from '@/utils/storage'
+import { getDecks, saveDecks, deleteDeck, setReviewSession } from '@/utils/storage'
 import { isDue, createDeck } from '@/utils/sm2'
 import { Deck } from '@/types'
 import TodayStats from './components/TodayStats'
@@ -44,7 +44,7 @@ export default function Home() {
       source: 'home',
       deckIds: [...new Set(allDueCards.map(c => decks.find(d => d.cards.some(dc => dc.id === c.id))?.id ?? ''))]
     }
-    Taro.setStorageSync('flashcard_review_session', JSON.stringify(session))
+    setReviewSession(session)
     Taro.navigateTo({ url: '/pages/review/index' })
   }
 

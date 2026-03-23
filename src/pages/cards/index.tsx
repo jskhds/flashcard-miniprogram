@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import Taro, { useRouter } from '@tarojs/taro'
 import { View, Text } from '@tarojs/components'
-import { getDeckById, saveDecks, getDecks } from '@/utils/storage'
+import { getDeckById, saveDecks, getDecks, setReviewSession } from '@/utils/storage'
 import { getDisplayStatus } from '@/utils/sm2'
 import { DisplayStatus } from '@/types'
 import CardStats from './components/CardStats'
@@ -55,7 +55,7 @@ export default function Cards() {
 
   function handleStartReview() {
     if (cards.length === 0) { Taro.showToast({ title: '暂无卡片', icon: 'none' }); return }
-    Taro.setStorageSync('flashcard_review_session', JSON.stringify({ cards, deckId }))
+    setReviewSession({ cards, deckId })
     Taro.navigateTo({ url: '/pages/review/index' })
   }
 
