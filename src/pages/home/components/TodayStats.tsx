@@ -5,60 +5,45 @@ interface TodayStatsProps {
   streak: number
   deckCount: number
   totalCards: number
-  onStartReview: () => void
+  masteryRate: number
 }
 
-export default function TodayStats({
-  todayCount,
-  streak,
-  deckCount,
-  totalCards,
-  onStartReview,
-}: TodayStatsProps) {
+function getGreeting(): string {
+  const hour = new Date().getHours()
+  if (hour >= 6 && hour < 12) return '早上好'
+  if (hour >= 12 && hour < 18) return '下午好'
+  return '晚上好'
+}
+
+export default function TodayStats({ todayCount, streak, deckCount, totalCards, masteryRate }: TodayStatsProps) {
   return (
     <>
-      {/* Header */}
-      <View className='home-header'>
-        <View className='home-greeting'>
-          <Text className='home-greeting__title'>今日复习</Text>
-          {streak > 0 && (
-            <View className='home-streak'>
-              <Text className='home-streak__fire'>🔥</Text>
-              <Text className='home-streak__text'>{streak} 天连续</Text>
-            </View>
-          )}
+      <Text className='home-greeting'>{getGreeting()}</Text>
+      <View className='home-hero'>
+        <View className='home-hero__top'>
+          <Text className='home-hero__due'>
+            今日待复习 <Text className='home-hero__due-num'>{todayCount}</Text> 张
+          </Text>
+          <View className='home-hero__streak'>
+            <Text className='home-hero__streak-text'>🔥 {streak} 天连续</Text>
+          </View>
         </View>
-        <View className='home-count'>
-          <Text className='home-count__number'>{todayCount}</Text>
-          <Text className='home-count__label'>张待复习</Text>
-        </View>
-      </View>
-
-      {/* Review Button */}
-      <View
-        className={`home-review-btn ${todayCount === 0 ? 'home-review-btn--disabled' : ''}`}
-        onClick={onStartReview}
-      >
-        <Text className='home-review-btn__text'>
-          {todayCount === 0 ? '今日无到期卡片' : `开始今日复习 · ${todayCount} 张`}
-        </Text>
-      </View>
-
-      {/* Stats Bar */}
-      <View className='home-stats'>
-        <View className='home-stats__item'>
-          <Text className='home-stats__value'>{deckCount}</Text>
-          <Text className='home-stats__label'>卡组</Text>
-        </View>
-        <View className='home-stats__divider' />
-        <View className='home-stats__item'>
-          <Text className='home-stats__value'>{totalCards}</Text>
-          <Text className='home-stats__label'>总卡片</Text>
-        </View>
-        <View className='home-stats__divider' />
-        <View className='home-stats__item'>
-          <Text className='home-stats__value'>{streak}</Text>
-          <Text className='home-stats__label'>连续天数</Text>
+        <View className='home-hero__divider' />
+        <View className='home-hero__stats'>
+          <View className='home-hero__stat'>
+            <Text className='home-hero__stat-value'>{totalCards}</Text>
+            <Text className='home-hero__stat-label'>已学总数</Text>
+          </View>
+          <View className='home-hero__stat-sep' />
+          <View className='home-hero__stat'>
+            <Text className='home-hero__stat-value'>{masteryRate}%</Text>
+            <Text className='home-hero__stat-label'>掌握率</Text>
+          </View>
+          <View className='home-hero__stat-sep' />
+          <View className='home-hero__stat'>
+            <Text className='home-hero__stat-value'>{deckCount}</Text>
+            <Text className='home-hero__stat-label'>卡组数</Text>
+          </View>
         </View>
       </View>
     </>

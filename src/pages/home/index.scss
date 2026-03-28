@@ -6,125 +6,85 @@
   gap: $gap-lg;
 }
 
-// ─── Header ────────────────────────────────────────────────────────────────
-.home-header {
-  @include flex-col;
-  gap: $gap-sm;
+// ─── Greeting ──────────────────────────────────────────────────────────────
+.home-greeting {
+  font-size: $font-size-2xl;
+  font-weight: $font-weight-bold;
+  color: $text-primary;
+  letter-spacing: -0.01em;
 }
 
-.home-greeting {
+// ─── Hero Card ─────────────────────────────────────────────────────────────
+.home-hero {
+  background: $accent;
+  border-radius: $radius-card;
+  padding: $gap-lg;
+  @include flex-col;
+  gap: $gap-md;
+}
+
+.home-hero__top {
   @include flex-between;
   align-items: center;
 }
 
-.home-greeting__title {
-  font-size: $font-size-lg;
-  font-weight: $font-weight-bold;
-  color: $text-secondary;
-  letter-spacing: 0.02em;
+.home-hero__due {
+  font-size: $font-size-base;
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: $font-weight-medium;
 }
 
-.home-streak {
-  display: flex;
-  align-items: center;
-  gap: 6rpx;
-  background: rgba($accent, 0.1);
+.home-hero__due-num {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  color: #FFFFFF;
+}
+
+.home-hero__streak {
+  background: rgba(255, 255, 255, 0.2);
   border-radius: $radius-full;
   padding: 8rpx 20rpx;
 }
 
-.home-streak__fire {
+.home-hero__streak-text {
   font-size: $font-size-sm;
-}
-
-.home-streak__text {
-  font-size: $font-size-sm;
-  color: $accent;
+  color: #FFFFFF;
   font-weight: $font-weight-semibold;
 }
 
-.home-count {
-  display: flex;
-  align-items: baseline;
-  gap: 12rpx;
+.home-hero__divider {
+  height: 2rpx;
+  background: rgba(255, 255, 255, 0.2);
 }
 
-.home-count__number {
-  font-size: 120rpx;
-  font-weight: $font-weight-bold;
-  color: $accent;
-  line-height: 1;
-  letter-spacing: -0.02em;
-}
-
-.home-count__label {
-  font-size: $font-size-lg;
-  color: $text-muted;
-  font-weight: $font-weight-regular;
-}
-
-// ─── Review Button ─────────────────────────────────────────────────────────
-.home-review-btn {
-  @include flex-center;
-  background: $accent;
-  border-radius: $radius-btn;
-  height: 96rpx;
-  box-shadow: $shadow-card;
-  transition: opacity $transition-fast;
-
-  &:active {
-    opacity: 0.85;
-  }
-
-  &--disabled {
-    background: $bg-surface;
-    box-shadow: none;
-
-    .home-review-btn__text {
-      color: $text-muted;
-    }
-  }
-}
-
-.home-review-btn__text {
-  font-size: $font-size-base;
-  font-weight: $font-weight-semibold;
-  color: $text-inverse;
-  letter-spacing: 0.02em;
-}
-
-// ─── Stats Bar ─────────────────────────────────────────────────────────────
-.home-stats {
+.home-hero__stats {
   display: flex;
   align-items: center;
-  background: $bg-card;
-  border-radius: $radius-card;
-  padding: $gap-md $gap-lg;
 }
 
-.home-stats__item {
+.home-hero__stat {
   flex: 1;
   @include flex-col;
   align-items: center;
   gap: 4rpx;
 }
 
-.home-stats__value {
+.home-hero__stat-value {
   font-size: $font-size-xl;
   font-weight: $font-weight-bold;
-  color: $text-primary;
+  color: #FFFFFF;
   line-height: 1.2;
 }
 
-.home-stats__label {
-  font-size: $font-size-sm;
-  color: $text-muted;
+.home-hero__stat-label {
+  font-size: $font-size-xs;
+  color: rgba(255, 255, 255, 0.7);
 }
 
-.home-stats__divider {
+.home-hero__stat-sep {
   width: 2rpx;
   height: 48rpx;
-  background: $border-color;
+  background: rgba(255, 255, 255, 0.25);
 }
 
 // ─── Decks Section ─────────────────────────────────────────────────────────
@@ -173,47 +133,53 @@
   max-width: 480rpx;
 }
 
-.home-empty__btn {
+// ─── Bottom Actions ────────────────────────────────────────────────────────
+.home-bottom {
+  @include flex-col;
+  gap: $gap-md;
+  padding-bottom: $gap-xl;
+}
+
+.home-review-btn {
   @include flex-center;
   background: $accent;
   border-radius: $radius-btn;
-  height: 88rpx;
-  padding: 0 $gap-xl;
-  margin-top: $gap-sm;
+  height: 96rpx;
   box-shadow: $shadow-card;
+  transition: opacity $transition-fast;
 
   &:active {
     opacity: 0.85;
   }
+
+  &--disabled {
+    background: $bg-surface;
+    box-shadow: none;
+
+    .home-review-btn__text {
+      color: $text-muted;
+    }
+  }
 }
 
-.home-empty__btn-text {
+.home-review-btn__text {
   font-size: $font-size-base;
   font-weight: $font-weight-semibold;
   color: $text-inverse;
+  letter-spacing: 0.02em;
 }
 
-// ─── FAB ───────────────────────────────────────────────────────────────────
-.home-fab {
-  position: fixed;
-  right: 40rpx;
-  bottom: 160rpx;
-  width: 96rpx;
-  height: 96rpx;
-  background: $accent;
-  border-radius: $radius-full;
+.home-create-btn {
   @include flex-center;
-  box-shadow: $shadow-lg;
-  z-index: 100;
+  height: 80rpx;
 
   &:active {
-    opacity: 0.85;
+    opacity: 0.7;
   }
 }
 
-.home-fab__icon {
-  font-size: 56rpx;
-  color: $text-inverse;
-  line-height: 1;
-  margin-top: -4rpx;
+.home-create-btn__text {
+  font-size: $font-size-base;
+  color: $accent;
+  font-weight: $font-weight-medium;
 }

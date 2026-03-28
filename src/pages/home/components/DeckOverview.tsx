@@ -8,10 +8,9 @@ interface DeckOverviewProps {
   decks: Deck[]
   onEdit: (deck: Deck) => void
   onDelete: (deck: Deck) => void
-  onCreateDeck: () => void
 }
 
-export default function DeckOverview({ decks, onEdit, onDelete, onCreateDeck }: DeckOverviewProps) {
+export default function DeckOverview({ decks, onEdit, onDelete }: DeckOverviewProps) {
   const { swipeOpen, setSwipeOpen, handleTouchStart, handleTouchEnd } = useSwipeGesture()
 
   if (decks.length === 0) {
@@ -20,9 +19,6 @@ export default function DeckOverview({ decks, onEdit, onDelete, onCreateDeck }: 
         <Text className='home-empty__emoji'>📚</Text>
         <Text className='home-empty__title'>还没有卡组</Text>
         <Text className='home-empty__desc'>创建你的第一个闪卡卡组，开始高效学习</Text>
-        <View className='home-empty__btn' onClick={onCreateDeck}>
-          <Text className='home-empty__btn-text'>创建卡组</Text>
-        </View>
       </View>
     )
   }
@@ -32,12 +28,12 @@ export default function DeckOverview({ decks, onEdit, onDelete, onCreateDeck }: 
   return (
     <View className='home-decks'>
       <View className='home-section-header'>
-        <Text className='home-section-title'>我的卡组</Text>
+        <Text className='home-section-title'>★ 收藏的卡组</Text>
         <Text
           className='home-section-more'
           onClick={() => Taro.switchTab({ url: '/pages/decks/index' })}
         >
-          全部 →
+          查看全部
         </Text>
       </View>
 
@@ -51,12 +47,9 @@ export default function DeckOverview({ decks, onEdit, onDelete, onCreateDeck }: 
           onClose={() => setSwipeOpen(null)}
           onEdit={onEdit}
           onDelete={onDelete}
+          showFooter
         />
       ))}
-
-      <View className='home-fab' onClick={onCreateDeck}>
-        <Text className='home-fab__icon'>+</Text>
-      </View>
     </View>
   )
 }

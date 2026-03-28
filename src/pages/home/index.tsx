@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import Taro from '@tarojs/taro'
-import { View } from '@tarojs/components'
+import { View, Text } from '@tarojs/components'
 import { getDecks, setReviewSession, getStreak } from '@/utils/storage'
-import { isDue } from '@/utils/sm2'
+import { isDue, getDeckStats } from '@/utils/sm2'
 import { Deck } from '@/types'
 import { useDeckCRUD } from '@/hooks/useDeckCRUD'
 import TodayStats from './components/TodayStats'
@@ -46,21 +46,37 @@ export default function Home() {
     Taro.navigateTo({ url: '/pages/review/index' })
   }
 
+  const totalCards = decks.reduce((s, d) => s + d.cards.length, 0)
+  const masteredCards = decks.reduce((s, d) => s + getDeckStats(d).mastered, 0)
+  const masteryRate = totalCards > 0 ? Math.round((masteredCards / totalCards) * 100) : 0
+
   return (
     <View className='home-page'>
       <TodayStats
         todayCount={todayCount}
         streak={streak}
         deckCount={decks.length}
-        totalCards={decks.reduce((s, d) => s + d.cards.length, 0)}
-        onStartReview={handleStartReview}
+        totalCards={totalCards}
+        masteryRate={masteryRate}
       />
       <DeckOverview
         decks={decks}
         onEdit={openEdit}
         onDelete={handleDelete}
-        onCreateDeck={openCreate}
       />
+      <View className='home-bottom'>
+        <View
+          className={`home-review-btn ${todayCount === 0 ? 'home-review-btn--disabled' : ''}`}
+          onClick={handleStartReview}
+        >
+          <Text className='home-review-btn__text'>
+            {todayCount === 0 ? '今日无到期卡片' : `▶ 开始今日复习`}
+          </Text>
+        </View>
+        <View className='home-create-btn' onClick={openCreate}>
+          <Text className='home-create-btn__text'>⊕ 新建卡组</Text>
+        </View>
+      </View>
       {showModal && (
         <DeckNameModal
           title={editingDeck ? '编辑卡组' : '新建卡组'}
