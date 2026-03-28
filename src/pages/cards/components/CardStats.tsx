@@ -1,21 +1,24 @@
 import { View, Text } from '@tarojs/components'
-import { DisplayStatus } from '@/types'
-import { getStatusColor } from '@/utils/sm2'
 
 interface CardStatsProps {
-  statusCounts: Record<string, number>
+  totalCount: number
+  masteredCount: number
+  dueCount: number
 }
 
-const STATUS_LIST: DisplayStatus[] = ['未学', '不会', '模糊', '掌握']
-
-export default function CardStats({ statusCounts }: CardStatsProps) {
+export default function CardStats({ totalCount, masteredCount, dueCount }: CardStatsProps) {
+  const masteryRate = totalCount > 0 ? Math.round(masteredCount / totalCount * 100) : 0
+  const stats = [
+    { value: `${totalCount}`, label: '总卡片' },
+    { value: `${masteryRate}%`, label: '掌握率' },
+    { value: `${dueCount}`, label: '今日待复习' },
+  ]
   return (
     <View className='cards-stats'>
-      {STATUS_LIST.map(s => (
-        <View key={s} className='cards-stat-item'>
-          <View className='cards-stat-dot' style={{ background: getStatusColor(s) }} />
-          <Text className='cards-stat-count'>{statusCounts[s] || 0}</Text>
-          <Text className='cards-stat-label'>{s}</Text>
+      {stats.map(s => (
+        <View key={s.label} className='cards-stat-item'>
+          <Text className='cards-stat-count'>{s.value}</Text>
+          <Text className='cards-stat-label'>{s.label}</Text>
         </View>
       ))}
     </View>

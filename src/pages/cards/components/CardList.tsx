@@ -1,7 +1,14 @@
 import { View, Text, ScrollView } from '@tarojs/components'
-import { Card } from '@/types'
-import { getDisplayStatus, isDue, getStatusColor } from '@/utils/sm2'
+import { Card, DisplayStatus } from '@/types'
+import { getDisplayStatus, getStatusColor } from '@/utils/sm2'
 import { useSwipeGesture } from '@/hooks/useSwipeGesture'
+
+const STATUS_BG: Record<DisplayStatus, string> = {
+  '掌握': 'rgba(52, 199, 89, 0.12)',
+  '模糊': 'rgba(255, 149, 0, 0.12)',
+  '不会': 'rgba(255, 59, 48, 0.12)',
+  '未学': 'rgba(199, 199, 204, 0.2)',
+}
 
 interface CardListProps {
   cards: Card[]
@@ -40,16 +47,13 @@ export default function CardList({ cards, onCardClick, onEdit, onDelete }: CardL
               }}
             >
               <View className='card-item__content'>
-                <View className='card-item__header'>
+                <View className='card-item__left'>
                   <View className='card-item__status-dot' style={{ background: getStatusColor(status) }} />
-                  <Text className='card-item__status-text' style={{ color: getStatusColor(status) }}>{status}</Text>
-                  {isDue(card) && card.repetitions > 0 && (
-                    <View className='card-item__due-badge'>
-                      <Text className='card-item__due-text'>待复习</Text>
-                    </View>
-                  )}
+                  <Text className='card-item__front'>{card.front.slice(0, 60)}{card.front.length > 60 ? '…' : ''}</Text>
                 </View>
-                <Text className='card-item__front'>{card.front.slice(0, 60)}{card.front.length > 60 ? '…' : ''}</Text>
+                <View className='card-item__status-badge' style={{ background: STATUS_BG[status] }}>
+                  <Text className='card-item__status-label' style={{ color: getStatusColor(status) }}>{status}</Text>
+                </View>
               </View>
             </View>
 

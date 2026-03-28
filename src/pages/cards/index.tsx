@@ -2,7 +2,7 @@ import { useState } from 'react'
 import Taro, { useRouter } from '@tarojs/taro'
 import { View, Text } from '@tarojs/components'
 import { getDeckById, saveDecks, getDecks, setReviewSession } from '@/utils/storage'
-import { getDisplayStatus } from '@/utils/sm2'
+import { getDisplayStatus, isDue } from '@/utils/sm2'
 import { DisplayStatus, Card } from '@/types'
 import CardStats from './components/CardStats'
 import FilterChips from './components/FilterChips'
@@ -31,6 +31,8 @@ export default function Cards() {
     return acc
   }, {} as Record<DisplayStatus, number>)
 
+  const masteredCount = statusCounts['掌握'] || 0
+  const dueCount = cards.filter(isDue).length
   const filteredCards = filter === '全部' ? cards : cards.filter(c => getDisplayStatus(c) === filter)
 
   function handleDelete(cardId: string) {
@@ -69,13 +71,19 @@ export default function Cards() {
     Taro.navigateTo({ url: `/pages/card-edit/index?deckId=${deckId}&cardId=${card.id}` })
   }
 
+  function handleAddCard() {
+    Taro.navigateTo({ url: `/pages/card-edit/index?deckId=${deckId}` })
+  }
+
   return (
     <View className='cards-page'>
       <View className='cards-header'>
         <Text className='cards-deck-name'>{deck.name}</Text>
-        <Text className='cards-total'>{cards.length} 张卡片</Text>
+        <View className='cards-add-btn' onClick={handleAddCard}>
+          <Text className='cards-add-btn__icon'>+</Text>
+        </View>
       </View>
-      <CardStats statusCounts={statusCounts} />
+      <CardStats totalCount={cards.length} masteredCount={masteredCount} dueCount={dueCount} />
       <FilterChips
         active={filter}
         statusCounts={statusCounts}
@@ -83,7 +91,7 @@ export default function Cards() {
         onSelect={setFilter}
       />
       <CardList cards={filteredCards} onCardClick={handleCardClick} onEdit={handleCardEdit} onDelete={(card) => handleDelete(card.id)} />
-      <BottomBar deckId={deckId} cardCount={cards.length} onStartReview={handleStartReview} />
+      <BottomBar dueCount={dueCount} disabled={cards.length === 0} onStartReview={handleStartReview} />
     </View>
   )
 }

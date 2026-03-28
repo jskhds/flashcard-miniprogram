@@ -21,9 +21,12 @@ export default function FilterChips({ active, statusCounts, totalCount, onSelect
           className={`cards-filter-chip ${active === f ? 'cards-filter-chip--active' : ''}`}
           onClick={() => onSelect(f)}
         >
-          <Text className='cards-filter-chip__text'>
-            {f} {f === '全部' ? `(${totalCount})` : `(${statusCounts[f] || 0})`}
-          </Text>
+          <Text className='cards-filter-chip__text'>{f}</Text>
+          <View className='cards-filter-chip__badge'>
+            <Text className='cards-filter-chip__badge-text'>
+              {f === '全部' ? totalCount : (statusCounts[f] || 0)}
+            </Text>
+          </View>
         </View>
       ))}
     </ScrollView>
