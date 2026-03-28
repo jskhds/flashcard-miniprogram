@@ -1,0 +1,146 @@
+@import '../../styles/tokens.scss';
+
+.deck-card-wrapper {
+  position: relative;
+  margin-bottom: $gap-sm;
+  border-radius: $radius-card;
+  overflow: hidden;
+}
+
+.deck-card {
+  position: relative;
+  z-index: 1;
+  background: $bg-card;
+  border-radius: $radius-card;
+  padding: $gap-md $gap-lg;
+  transition: transform $transition-base;
+
+  &--swiped {
+    transform: translateX(-192rpx);
+    pointer-events: none;
+  }
+
+  &:active {
+    background: $bg-surface;
+  }
+}
+
+.deck-card__top {
+  @include flex-between;
+  margin-bottom: $gap-md;
+}
+
+.deck-card__name {
+  font-size: $font-size-base;
+  font-weight: $font-weight-semibold;
+  color: $text-primary;
+  @include text-overflow;
+  max-width: 60%;
+}
+
+.deck-card__badges {
+  display: flex;
+  align-items: center;
+  gap: $gap-xs;
+}
+
+.deck-card__due-badge {
+  border-radius: $radius-full;
+  padding: 4rpx 16rpx;
+  background: rgba($accent, 0.12);
+}
+
+.deck-card__due-text {
+  font-size: $font-size-xs;
+  color: $accent;
+  font-weight: $font-weight-semibold;
+}
+
+.deck-card__count {
+  font-size: $font-size-sm;
+  color: $text-muted;
+}
+
+.deck-card__progress {
+  display: flex;
+  align-items: center;
+  gap: $gap-sm;
+}
+
+.deck-card__progress-bar {
+  flex: 1;
+  height: 8rpx;
+  background: $bg-surface;
+  border-radius: $radius-full;
+  overflow: hidden;
+}
+
+.deck-card__progress-fill {
+  height: 100%;
+  background: $status-know;
+  border-radius: $radius-full;
+  transition: width 0.3s ease;
+  min-width: 4rpx;
+}
+
+.deck-card__rate {
+  font-size: $font-size-xs;
+  color: $text-muted;
+  white-space: nowrap;
+}
+
+.deck-card__footer {
+  @include flex-between;
+  margin-top: $gap-sm;
+}
+
+.deck-card__footer-text {
+  font-size: $font-size-sm;
+  color: $text-secondary;
+}
+
+.deck-card__arrow {
+  font-size: $font-size-lg;
+  color: $text-muted;
+}
+
+// ─── Swipe Actions ─────────────────────────────────────────────────────────
+.deck-card-close-area {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 192rpx;
+  z-index: 2;
+}
+
+.deck-card-swipe-actions {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  z-index: 2;
+}
+
+.deck-card-swipe-btn {
+  width: 96rpx;
+  @include flex-center;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+
+  &:active {
+    opacity: 0.8;
+  }
+
+  &--edit {
+    background: $bg-surface-2;
+    color: $text-primary;
+  }
+
+  &--delete {
+    background: $status-unknown;
+    color: $text-inverse;
+    border-radius: 0 $radius-card $radius-card 0;
+  }
+}
