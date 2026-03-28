@@ -3,6 +3,7 @@ import Taro, { useRouter } from '@tarojs/taro'
 import { getDeckById, saveDecks, getDecks } from '@/utils/storage'
 import { createCard } from '@/utils/sm2'
 import CardEditForm from './components/CardEditForm'
+import './index.scss'
 
 export default function CardEdit() {
   const router = useRouter()
@@ -49,6 +50,27 @@ export default function CardEdit() {
     setTimeout(() => Taro.navigateBack(), 800)
   }
 
+  function handleDelete() {
+    Taro.showModal({
+      title: '删除卡片',
+      content: '确认删除这张卡片？',
+      confirmText: '删除',
+      confirmColor: '#FF3B30',
+      success: (res) => {
+        if (res.confirm) {
+          const allDecks = getDecks()
+          const deck = allDecks.find(d => d.id === deckId)
+          if (deck) {
+            deck.cards = deck.cards.filter(c => c.id !== cardId)
+            saveDecks(allDecks)
+          }
+          Taro.showToast({ title: '已删除', icon: 'success' })
+          setTimeout(() => Taro.navigateBack(), 800)
+        }
+      }
+    })
+  }
+
   return (
     <CardEditForm
       front={front}
@@ -59,6 +81,7 @@ export default function CardEdit() {
       onFrontChange={(val) => { setFront(val); setFrontError('') }}
       onBackChange={setBack}
       onSave={handleSave}
+      onDelete={handleDelete}
     />
   )
 }

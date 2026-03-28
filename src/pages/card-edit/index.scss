@@ -3,95 +3,79 @@
 .card-edit-page {
   @include page-container;
   @include flex-col;
-  gap: $gap-lg;
-  padding-bottom: 180rpx;
+  gap: $gap-md;
+  padding-bottom: 240rpx;
 }
 
-// ─── Form ──────────────────────────────────────────────────────────────────
-.card-edit-form {
-  background: $bg-card;
-  border-radius: $radius-card;
-  overflow: hidden;
-}
-
+// ─── Field ─────────────────────────────────────────────────────────────────
 .card-edit-field {
-  padding: $gap-md $gap-lg;
-}
-
-.card-edit-field__header {
-  @include flex-between;
-  margin-bottom: $gap-sm;
+  @include flex-col;
+  gap: $gap-sm;
 }
 
 .card-edit-field__label {
-  font-size: $font-size-sm;
-  font-weight: $font-weight-semibold;
+  font-size: 22rpx;
+  font-weight: $font-weight-bold;
   color: $text-muted;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
 }
 
-.card-edit-field__count {
-  font-size: $font-size-xs;
-  color: $text-muted;
-}
+.card-edit-field__box {
+  background: #FFFFFF;
+  border-radius: 36rpx;
+  padding: $gap-md $gap-lg;
+  box-shadow: 0 4rpx 24rpx rgba(0, 0, 0, 0.05);
 
-.card-edit-textarea--error {
-  border-bottom: 2rpx solid $status-unknown;
+  &--error {
+    box-shadow: 0 0 0 2rpx $status-unknown;
+  }
 }
 
 .card-edit-field__error {
-  display: block;
   font-size: $font-size-sm;
   color: $status-unknown;
-  margin-top: 8rpx;
 }
 
+// ─── Textarea ──────────────────────────────────────────────────────────────
 .card-edit-textarea {
   width: 100%;
-  min-height: 160rpx;
-  font-size: $font-size-base;
+  font-size: 40rpx;
+  font-weight: $font-weight-medium;
   color: $text-primary;
-  line-height: $line-height-relaxed;
+  line-height: $line-height-base;
   background: transparent;
   border: none;
   resize: none;
 
-  &::placeholder {
-    color: $text-muted;
+  &--front {
+    min-height: 260rpx;
+  }
+
+  &--back {
+    min-height: 520rpx;
   }
 }
 
-.card-edit-divider {
-  display: flex;
-  align-items: center;
-  padding: 0 $gap-lg;
-  gap: $gap-sm;
+// ─── Delete Button ─────────────────────────────────────────────────────────
+.card-edit-delete-btn {
+  @include flex-center;
+  height: 80rpx;
+
+  &:active {
+    opacity: 0.7;
+  }
 }
 
-.card-edit-divider__line {
-  flex: 1;
-  height: 2rpx;
-  background: $border-color;
-}
-
-.card-edit-divider__text {
-  font-size: $font-size-md;
-  color: $text-muted;
-}
-
-// ─── Tip ───────────────────────────────────────────────────────────────────
-.card-edit-tip {
+.card-edit-delete-btn__text {
   font-size: $font-size-sm;
-  color: $text-muted;
-  line-height: $line-height-relaxed;
-  padding: 0 4rpx;
+  font-weight: $font-weight-medium;
+  color: $status-unknown;
 }
 
 // ─── Save Button ───────────────────────────────────────────────────────────
 .card-edit-save-btn {
   position: fixed;
-  bottom: env(safe-area-inset-bottom);
   left: $page-padding;
   right: $page-padding;
   bottom: calc(#{$gap-lg} + env(safe-area-inset-bottom));
@@ -99,7 +83,7 @@
   background: $accent;
   border-radius: $radius-btn;
   height: 96rpx;
-  box-shadow: $shadow-card;
+  box-shadow: 0 12rpx 48rpx rgba(244, 132, 95, 0.36);
   transition: opacity $transition-fast;
 
   &:active {

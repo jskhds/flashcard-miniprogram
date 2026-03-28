@@ -1,16 +1,16 @@
-import Taro from '@tarojs/taro'
 import { View, Text, ScrollView } from '@tarojs/components'
-import { Card, DisplayStatus } from '@/types'
+import { Card } from '@/types'
 import { getDisplayStatus, isDue, getStatusColor } from '@/utils/sm2'
 import { useSwipeGesture } from '@/hooks/useSwipeGesture'
 
 interface CardListProps {
   cards: Card[]
-  deckId: string
-  onDelete: (cardId: string) => void
+  onCardClick: (card: Card) => void
+  onEdit: (card: Card) => void
+  onDelete: (card: Card) => void
 }
 
-export default function CardList({ cards, deckId, onDelete }: CardListProps) {
+export default function CardList({ cards, onCardClick, onEdit, onDelete }: CardListProps) {
   const { swipeOpen, setSwipeOpen, handleTouchStart, handleTouchEnd } = useSwipeGesture()
 
   if (cards.length === 0) {
@@ -37,7 +37,7 @@ export default function CardList({ cards, deckId, onDelete }: CardListProps) {
               className={`card-item ${isOpen ? 'card-item--swiped' : ''}`}
               onClick={() => {
                 if (isOpen) { setSwipeOpen(null); return }
-                Taro.navigateTo({ url: `/pages/card-edit/index?deckId=${deckId}&cardId=${card.id}` })
+                onCardClick(card)
               }}
             >
               <View className='card-item__content'>
@@ -51,21 +51,14 @@ export default function CardList({ cards, deckId, onDelete }: CardListProps) {
                   )}
                 </View>
                 <Text className='card-item__front'>{card.front.slice(0, 60)}{card.front.length > 60 ? '…' : ''}</Text>
-                <Text className='card-item__back'>{card.back.slice(0, 40)}{card.back.length > 40 ? '…' : ''}</Text>
               </View>
             </View>
 
             <View className='card-swipe-actions'>
-              <View
-                className='card-swipe-btn card-swipe-btn--edit'
-                onClick={() => {
-                  setSwipeOpen(null)
-                  Taro.navigateTo({ url: `/pages/card-edit/index?deckId=${deckId}&cardId=${card.id}` })
-                }}
-              >
+              <View className='card-swipe-btn card-swipe-btn--edit' onClick={() => onEdit(card)}>
                 <Text>编辑</Text>
               </View>
-              <View className='card-swipe-btn card-swipe-btn--delete' onClick={() => onDelete(card.id)}>
+              <View className='card-swipe-btn card-swipe-btn--delete' onClick={() => onDelete(card)}>
                 <Text>删除</Text>
               </View>
             </View>

@@ -9,6 +9,7 @@ interface CardEditFormProps {
   onFrontChange: (val: string) => void
   onBackChange: (val: string) => void
   onSave: () => void
+  onDelete?: () => void
 }
 
 export default function CardEditForm({
@@ -20,56 +21,49 @@ export default function CardEditForm({
   onFrontChange,
   onBackChange,
   onSave,
+  onDelete,
 }: CardEditFormProps) {
   return (
     <View className='card-edit-page'>
-      <View className='card-edit-form'>
-        <View className='card-edit-field'>
-          <View className='card-edit-field__header'>
-            <Text className='card-edit-field__label'>正面</Text>
-            <Text className='card-edit-field__count'>{front.length}/500</Text>
-          </View>
+      <View className='card-edit-field'>
+        <Text className='card-edit-field__label'>正面（问题）</Text>
+        <View className={`card-edit-field__box ${frontError ? 'card-edit-field__box--error' : ''}`}>
           <Textarea
-            className={`card-edit-textarea ${frontError ? 'card-edit-textarea--error' : ''}`}
+            className='card-edit-textarea card-edit-textarea--front'
             value={front}
             onInput={e => onFrontChange(e.detail.value)}
             placeholder='输入问题或关键词...'
             maxlength={500}
-            autoHeight
           />
-          {frontError ? <Text className='card-edit-field__error'>{frontError}</Text> : null}
         </View>
+        {frontError ? <Text className='card-edit-field__error'>{frontError}</Text> : null}
+      </View>
 
-        <View className='card-edit-divider'>
-          <View className='card-edit-divider__line' />
-          <Text className='card-edit-divider__text'>↕</Text>
-          <View className='card-edit-divider__line' />
-        </View>
-
-        <View className='card-edit-field'>
-          <View className='card-edit-field__header'>
-            <Text className='card-edit-field__label'>背面</Text>
-            <Text className='card-edit-field__count'>{back.length}/500</Text>
-          </View>
+      <View className='card-edit-field'>
+        <Text className='card-edit-field__label'>背面（答案）</Text>
+        <View className='card-edit-field__box'>
           <Textarea
-            className='card-edit-textarea'
+            className='card-edit-textarea card-edit-textarea--back'
             value={back}
             onInput={e => onBackChange(e.detail.value)}
             placeholder='输入答案或解释...'
             maxlength={500}
-            autoHeight
           />
         </View>
       </View>
 
-      <Text className='card-edit-tip'>💡 建议每张卡片聚焦一个知识点，便于记忆</Text>
+      {isEdit && onDelete && (
+        <View className='card-edit-delete-btn' onClick={onDelete}>
+          <Text className='card-edit-delete-btn__text'>删除卡片</Text>
+        </View>
+      )}
 
       <View
         className={`card-edit-save-btn ${!isValid ? 'card-edit-save-btn--disabled' : ''}`}
         onClick={onSave}
       >
         <Text className='card-edit-save-btn__text'>
-          {isEdit ? '保存修改' : '创建卡片'}
+          {isEdit ? '保存' : '创建卡片'}
         </Text>
       </View>
     </View>

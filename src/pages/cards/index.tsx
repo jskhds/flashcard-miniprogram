@@ -3,7 +3,7 @@ import Taro, { useRouter } from '@tarojs/taro'
 import { View, Text } from '@tarojs/components'
 import { getDeckById, saveDecks, getDecks, setReviewSession } from '@/utils/storage'
 import { getDisplayStatus } from '@/utils/sm2'
-import { DisplayStatus } from '@/types'
+import { DisplayStatus, Card } from '@/types'
 import CardStats from './components/CardStats'
 import FilterChips from './components/FilterChips'
 import CardList from './components/CardList'
@@ -59,6 +59,15 @@ export default function Cards() {
     Taro.navigateTo({ url: '/pages/review/index' })
   }
 
+  function handleCardClick(card: Card) {
+    setReviewSession({ cards: [card], deckId })
+    Taro.navigateTo({ url: '/pages/review/index' })
+  }
+
+  function handleCardEdit(card: Card) {
+    Taro.navigateTo({ url: `/pages/card-edit/index?deckId=${deckId}&cardId=${card.id}` })
+  }
+
   return (
     <View className='cards-page'>
       <View className='cards-header'>
@@ -72,7 +81,7 @@ export default function Cards() {
         totalCount={cards.length}
         onSelect={setFilter}
       />
-      <CardList cards={filteredCards} deckId={deckId} onDelete={handleDelete} />
+      <CardList cards={filteredCards} onCardClick={handleCardClick} onEdit={handleCardEdit} onDelete={(card) => handleDelete(card.id)} />
       <BottomBar deckId={deckId} cardCount={cards.length} onStartReview={handleStartReview} />
     </View>
   )
