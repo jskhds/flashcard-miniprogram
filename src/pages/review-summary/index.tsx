@@ -15,15 +15,17 @@ interface SummaryData {
 }
 
 export default function ReviewSummary() {
-  const [data, setData] = useState<SummaryData | null>(null)
+  const [data] = useState<SummaryData | null>(() => {
+    const raw = getSummaryResults<SummaryData>()
+    if (raw) {
+      clearSummaryResults()
+      return raw
+    }
+    return null
+  })
   const [streak, setStreak] = useState(0)
 
   useEffect(() => {
-    const raw = getSummaryResults<SummaryData>()
-    if (raw) {
-      setData(raw)
-      clearSummaryResults()
-    }
     setStreak(updateStreak().current)
   }, [])
 
