@@ -10,9 +10,10 @@
 .deck-card {
   position: relative;
   z-index: 1;
-  background: $bg-card;
+  background: #FFFFFF;
   border-radius: $radius-card;
   padding: $gap-md $gap-lg;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.06);
   transition: transform $transition-base;
 
   &--swiped {
@@ -21,13 +22,22 @@
   }
 
   &:active {
-    background: $bg-surface;
+    opacity: 0.95;
   }
 }
 
+// ─── Top Row ───────────────────────────────────────────────────────────────
 .deck-card__top {
   @include flex-between;
-  margin-bottom: $gap-md;
+  align-items: flex-start;
+  margin-bottom: $gap-sm;
+}
+
+.deck-card__title-col {
+  @include flex-col;
+  gap: 4rpx;
+  flex: 1;
+  min-width: 0;
 }
 
 .deck-card__name {
@@ -35,25 +45,19 @@
   font-weight: $font-weight-semibold;
   color: $text-primary;
   @include text-overflow;
-  max-width: 60%;
 }
 
-.deck-card__badges {
+.deck-card__subtitle {
+  font-size: $font-size-xs;
+  color: $text-muted;
+}
+
+.deck-card__top-right {
   display: flex;
   align-items: center;
   gap: $gap-xs;
-}
-
-.deck-card__due-badge {
-  border-radius: $radius-full;
-  padding: 4rpx 16rpx;
-  background: rgba($accent, 0.12);
-}
-
-.deck-card__due-text {
-  font-size: $font-size-xs;
-  color: $accent;
-  font-weight: $font-weight-semibold;
+  flex-shrink: 0;
+  margin-left: $gap-sm;
 }
 
 .deck-card__count {
@@ -61,14 +65,40 @@
   color: $text-muted;
 }
 
-.deck-card__progress {
-  display: flex;
-  align-items: center;
-  gap: $gap-sm;
+.deck-card__star {
+  width: 40rpx;
+  height: 40rpx;
+  @include flex-center;
+}
+
+.deck-card__star-icon {
+  font-size: 36rpx;
+  color: $text-muted;
+  line-height: 1;
+}
+
+// ─── Progress ──────────────────────────────────────────────────────────────
+.deck-card__progress-section {
+  @include flex-col;
+  gap: $gap-xs;
+  margin-bottom: $gap-sm;
+}
+
+.deck-card__progress-header {
+  @include flex-between;
+}
+
+.deck-card__progress-label {
+  font-size: $font-size-xs;
+  color: $text-muted;
+}
+
+.deck-card__progress-rate {
+  font-size: $font-size-xs;
+  font-weight: $font-weight-semibold;
 }
 
 .deck-card__progress-bar {
-  flex: 1;
   height: 8rpx;
   background: $bg-surface;
   border-radius: $radius-full;
@@ -77,7 +107,6 @@
 
 .deck-card__progress-fill {
   height: 100%;
-  background: $status-know;
   border-radius: $radius-full;
   transition: width 0.3s ease;
   min-width: 4rpx;
@@ -87,20 +116,34 @@
   font-size: $font-size-xs;
   color: $text-muted;
   white-space: nowrap;
+  text-align: right;
 }
 
-.deck-card__footer {
-  @include flex-between;
-  margin-top: $gap-sm;
+// ─── Stats Row ─────────────────────────────────────────────────────────────
+.deck-card__stats {
+  display: flex;
+  gap: $gap-md;
 }
 
-.deck-card__footer-text {
-  font-size: $font-size-sm;
-  color: $text-secondary;
+.deck-card__stat-item {
+  display: flex;
+  align-items: center;
+  gap: 6rpx;
 }
 
-.deck-card__arrow {
-  font-size: $font-size-lg;
+.deck-card__stat-dot {
+  width: 12rpx;
+  height: 12rpx;
+  border-radius: $radius-full;
+  flex-shrink: 0;
+
+  &--know    { background: $status-know; }
+  &--fuzzy   { background: $accent; }
+  &--unknown { background: $status-unknown; }
+}
+
+.deck-card__stat-text {
+  font-size: $font-size-xs;
   color: $text-muted;
 }
 
