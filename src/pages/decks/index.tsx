@@ -25,14 +25,12 @@ export default function Decks() {
     <View className='decks-page'>
       <View className='decks-header'>
         <Text className='decks-title'>我的卡组</Text>
-        <Text className='decks-subtitle'>{decks.length} 个卡组</Text>
+        <View className='decks-add-btn' onClick={openCreate}>
+          <Text className='decks-add-btn__icon'>+</Text>
+        </View>
       </View>
 
       <DeckList decks={decks} onEdit={openEdit} onDelete={handleDelete} />
-
-      <View className='decks-fab' onClick={openCreate}>
-        <Text className='decks-fab__icon'>+</Text>
-      </View>
 
       {showModal && (
         <DeckNameModal

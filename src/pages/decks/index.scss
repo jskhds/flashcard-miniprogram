@@ -8,8 +8,8 @@
 }
 
 .decks-header {
-  @include flex-col;
-  gap: 4rpx;
+  @include flex-between;
+  align-items: center;
 }
 
 .decks-title {
@@ -19,9 +19,23 @@
   letter-spacing: -0.01em;
 }
 
-.decks-subtitle {
-  font-size: $font-size-md;
-  color: $text-muted;
+.decks-add-btn {
+  width: 72rpx;
+  height: 72rpx;
+  background: $accent;
+  border-radius: $radius-btn;
+  @include flex-center;
+
+  &:active {
+    opacity: 0.85;
+  }
+}
+
+.decks-add-btn__icon {
+  font-size: 48rpx;
+  color: $text-inverse;
+  line-height: 1;
+  margin-top: -4rpx;
 }
 
 // ─── Empty ─────────────────────────────────────────────────────────────────
@@ -55,27 +69,3 @@
   padding-bottom: 160rpx;
 }
 
-// ─── FAB ───────────────────────────────────────────────────────────────────
-.decks-fab {
-  position: fixed;
-  right: 40rpx;
-  bottom: 160rpx;
-  width: 96rpx;
-  height: 96rpx;
-  background: $accent;
-  border-radius: $radius-full;
-  @include flex-center;
-  box-shadow: $shadow-lg;
-  z-index: 100;
-
-  &:active {
-    opacity: 0.85;
-  }
-}
-
-.decks-fab__icon {
-  font-size: 56rpx;
-  color: $text-inverse;
-  line-height: 1;
-  margin-top: -4rpx;
-}
