@@ -36,8 +36,7 @@ export default function CardList({ cards, onCardClick, onEdit, onDelete }: CardL
             <View
               className={`card-item ${isOpen ? 'card-item--swiped' : ''}`}
               onClick={() => {
-                if (isOpen) { setSwipeOpen(null); return }
-                onCardClick(card)
+                if (!isOpen) onCardClick(card)
               }}
             >
               <View className='card-item__content'>
@@ -54,14 +53,19 @@ export default function CardList({ cards, onCardClick, onEdit, onDelete }: CardL
               </View>
             </View>
 
-            <View className='card-swipe-actions'>
-              <View className='card-swipe-btn card-swipe-btn--edit' onClick={() => onEdit(card)}>
-                <Text>编辑</Text>
-              </View>
-              <View className='card-swipe-btn card-swipe-btn--delete' onClick={() => onDelete(card)}>
-                <Text>删除</Text>
-              </View>
-            </View>
+            {isOpen && (
+              <>
+                <View className='card-swipe-close-area' onClick={() => setSwipeOpen(null)} />
+                <View className='card-swipe-actions'>
+                  <View className='card-swipe-btn card-swipe-btn--edit' onClick={() => { setSwipeOpen(null); onEdit(card) }}>
+                    <Text>编辑</Text>
+                  </View>
+                  <View className='card-swipe-btn card-swipe-btn--delete' onClick={() => { setSwipeOpen(null); onDelete(card) }}>
+                    <Text>删除</Text>
+                  </View>
+                </View>
+              </>
+            )}
           </View>
         )
       })}

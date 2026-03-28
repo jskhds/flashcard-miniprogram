@@ -36,7 +36,8 @@ export default function Cards() {
   function handleDelete(cardId: string) {
     Taro.showModal({
       title: '删除卡片',
-      content: '确认删除这张卡片？',
+      content: '是否确认删除？删除后无法恢复。',
+      cancelText: '取消',
       confirmText: '删除',
       confirmColor: '#FF3B30',
       success: (res) => {

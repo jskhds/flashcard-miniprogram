@@ -72,6 +72,7 @@
 
   &--swiped {
     transform: translateX(-192rpx);
+    pointer-events: none;
   }
 
   &:active {
@@ -166,13 +167,22 @@
 }
 
 // ─── Swipe Actions ─────────────────────────────────────────────────────────
+.deck-swipe-close-area {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 192rpx;
+  z-index: 2;
+}
+
 .deck-swipe-actions {
   position: absolute;
   right: 0;
   top: 0;
   bottom: 0;
   display: flex;
-  z-index: 0;
+  z-index: 2;
 }
 
 .deck-swipe-btn {

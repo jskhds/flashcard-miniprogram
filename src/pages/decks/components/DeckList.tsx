@@ -39,8 +39,7 @@ export default function DeckList({ decks, onEdit, onDelete }: DeckListProps) {
             <View
               className={`deck-item ${isOpen ? 'deck-item--swiped' : ''}`}
               onClick={() => {
-                if (isOpen) { setSwipeOpen(null); return }
-                Taro.navigateTo({ url: `/pages/cards/index?deckId=${deck.id}` })
+                if (!isOpen) Taro.navigateTo({ url: `/pages/cards/index?deckId=${deck.id}` })
               }}
             >
               <View className='deck-item__content'>
@@ -70,14 +69,19 @@ export default function DeckList({ decks, onEdit, onDelete }: DeckListProps) {
               </View>
             </View>
 
-            <View className='deck-swipe-actions'>
-              <View className='deck-swipe-btn deck-swipe-btn--edit' onClick={() => onEdit(deck)}>
-                <Text>编辑</Text>
-              </View>
-              <View className='deck-swipe-btn deck-swipe-btn--delete' onClick={() => onDelete(deck)}>
-                <Text>删除</Text>
-              </View>
-            </View>
+            {isOpen && (
+              <>
+                <View className='deck-swipe-close-area' onClick={() => setSwipeOpen(null)} />
+                <View className='deck-swipe-actions'>
+                  <View className='deck-swipe-btn deck-swipe-btn--edit' onClick={() => { setSwipeOpen(null); onEdit(deck) }}>
+                    <Text>编辑</Text>
+                  </View>
+                  <View className='deck-swipe-btn deck-swipe-btn--delete' onClick={() => { setSwipeOpen(null); onDelete(deck) }}>
+                    <Text>删除</Text>
+                  </View>
+                </View>
+              </>
+            )}
           </View>
         )
       })}
