@@ -1,9 +1,7 @@
-import Taro from '@tarojs/taro'
 import { View, Text } from '@tarojs/components'
 import { Deck } from '@/types'
-import { getDeckStats } from '@/utils/sm2'
-import ProgressBar from '@/components/ProgressBar'
 import { useSwipeGesture } from '@/hooks/useSwipeGesture'
+import DeckCard from '@/components/DeckCard'
 
 interface DeckListProps {
   decks: Deck[]
@@ -26,65 +24,19 @@ export default function DeckList({ decks, onEdit, onDelete }: DeckListProps) {
 
   return (
     <View className='decks-list'>
-      {decks.map(deck => {
-        const stats = getDeckStats(deck)
-        const isOpen = swipeOpen === deck.id
-        return (
-          <View
-            key={deck.id}
-            className='deck-item-wrapper'
-            onTouchStart={handleTouchStart}
-            onTouchEnd={(e) => handleTouchEnd(e, deck.id)}
-          >
-            <View
-              className={`deck-item ${isOpen ? 'deck-item--swiped' : ''}`}
-              onClick={() => {
-                if (!isOpen) Taro.navigateTo({ url: `/pages/cards/index?deckId=${deck.id}` })
-              }}
-            >
-              <View className='deck-item__content'>
-                <View className='deck-item__top'>
-                  <Text className='deck-item__name'>{deck.name}</Text>
-                  <View className='deck-item__badges'>
-                    {stats.due > 0 && (
-                      <View className='deck-badge deck-badge--due'>
-                        <Text className='deck-badge__text'>{stats.due} 到期</Text>
-                      </View>
-                    )}
-                    <Text className='deck-item__count'>{stats.total} 张</Text>
-                  </View>
-                </View>
-                <ProgressBar
-                  rate={stats.rate}
-                  wrapperClass='deck-item__progress'
-                  barClass='deck-progress-bar'
-                  fillClass='deck-progress-bar__fill'
-                  label={`${stats.rate}%`}
-                  labelClass='deck-item__rate'
-                />
-                <View className='deck-item__footer'>
-                  <Text className='deck-item__footer-text'>掌握 {stats.mastered}/{stats.total}</Text>
-                  <Text className='deck-item__arrow'>›</Text>
-                </View>
-              </View>
-            </View>
-
-            {isOpen && (
-              <>
-                <View className='deck-swipe-close-area' onClick={() => setSwipeOpen(null)} />
-                <View className='deck-swipe-actions'>
-                  <View className='deck-swipe-btn deck-swipe-btn--edit' onClick={() => { setSwipeOpen(null); onEdit(deck) }}>
-                    <Text>编辑</Text>
-                  </View>
-                  <View className='deck-swipe-btn deck-swipe-btn--delete' onClick={() => { setSwipeOpen(null); onDelete(deck) }}>
-                    <Text>删除</Text>
-                  </View>
-                </View>
-              </>
-            )}
-          </View>
-        )
-      })}
+      {decks.map(deck => (
+        <DeckCard
+          key={deck.id}
+          deck={deck}
+          isOpen={swipeOpen === deck.id}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={(e) => handleTouchEnd(e, deck.id)}
+          onClose={() => setSwipeOpen(null)}
+          onEdit={onEdit}
+          onDelete={onDelete}
+          showFooter
+        />
+      ))}
     </View>
   )
 }
