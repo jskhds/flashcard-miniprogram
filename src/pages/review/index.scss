@@ -48,11 +48,23 @@
 // ─── Card ──────────────────────────────────────────────────────────────────
 .review-card-container {
   flex: 1;
-  display: flex;
+  @include flex-col;
   align-items: center;
   justify-content: center;
   perspective: 1200rpx;
-  min-height: 500rpx;
+  gap: $gap-md;
+}
+
+.review-card-frame {
+  width: 100%;
+  min-height: 480rpx;
+  position: relative;
+}
+
+.review-card-tap-area {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
 }
 
 .review-card {
@@ -88,37 +100,75 @@
   padding: $gap-xl $gap-lg;
   @include flex-col;
   box-shadow: $shadow-md;
+  overflow: hidden;
 }
 
 .review-card__front {
   @include flex-col;
-  justify-content: space-between;
+  justify-content: center;
 }
 
 .review-card__back {
   transform: rotateY(180deg);
   @include flex-col;
-  justify-content: center;
-  gap: $gap-md;
+  padding: 0;
 }
 
-.review-card__back-front {
-  padding: $gap-sm $gap-md;
+.review-card__back-question {
   background: $bg-surface;
-  border-radius: $radius-sm;
+  @include flex-col;
+  align-items: center;
+  padding: $gap-md $gap-lg;
+  gap: $gap-xs;
+  border-radius: $radius-card $radius-card 0 0;
+  border-bottom: 2rpx solid $border-light;
 }
 
-.review-card__divider {
-  height: 2rpx;
-  background: $border-color;
-  margin: $gap-sm 0;
+.review-card__back-label-row {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
 }
 
-.review-card__hint {
-  font-size: $font-size-sm;
+.review-card__back-label-bar {
+  width: 4rpx;
+  height: 24rpx;
+  border-radius: 2rpx;
+  background: $text-muted;
+  flex-shrink: 0;
+}
+
+.review-card__back-label {
+  font-size: $font-size-xs;
+  font-weight: $font-weight-bold;
   color: $text-muted;
+  letter-spacing: 0.1em;
+}
+
+.review-card__back-question-text {
+  font-size: $font-size-lg;
+  color: $text-primary;
+  font-weight: $font-weight-medium;
   text-align: center;
-  font-style: italic;
+  line-height: $line-height-base;
+}
+
+.review-card__back-answer {
+  flex: 1;
+  @include flex-center;
+  padding: $gap-lg;
+  background: $bg-card;
+  border-radius: 0 0 $radius-card $radius-card;
+  overflow: hidden;
+  position: relative;
+}
+
+.review-card__back-answer-text {
+  font-size: $font-size-2xl;
+  color: $text-primary;
+  font-weight: $font-weight-bold;
+  text-align: center;
+  line-height: $line-height-base;
 }
 
 .review-card__content {
@@ -131,13 +181,34 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
+  z-index: 1;
+}
 
-  &--small {
-    font-size: $font-size-md;
-    color: $text-secondary;
-    font-weight: $font-weight-regular;
-    flex: 0;
+// ─── Decorative Circles ────────────────────────────────────────────────────
+.review-card__deco {
+  position: absolute;
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  pointer-events: none;
+
+  &--tr {
+    top: -48rpx;
+    right: -48rpx;
   }
+
+  &--bl {
+    bottom: -48rpx;
+    left: -48rpx;
+  }
+}
+
+.review-card__front .review-card__deco,
+.review-card__back-answer .review-card__deco {
+  background: #F4845F;
+  opacity: 0.35;
 }
 
 // ─── Rating Buttons ────────────────────────────────────────────────────────
@@ -210,11 +281,6 @@
 }
 
 // ─── Flip Hint ─────────────────────────────────────────────────────────────
-.review-flip-hint {
-  @include flex-center;
-  padding-bottom: calc(#{$gap-xl} + env(safe-area-inset-bottom));
-}
-
 .review-flip-hint__text {
   font-size: $font-size-md;
   color: $text-muted;

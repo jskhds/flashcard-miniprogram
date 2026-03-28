@@ -79,16 +79,9 @@ export default function Review() {
         card={currentCard}
         isFlipped={isFlipped}
         isSliding={isSliding}
-        onFlip={() => { if (!isFlipped) setIsFlipped(true) }}
+        onFlip={() => setIsFlipped(f => !f)}
       />
-      {isFlipped
-        ? <RatingButtons onRate={handleRate} />
-        : (
-          <View className='review-flip-hint'>
-            <Text className='review-flip-hint__text'>轻触卡片查看答案</Text>
-          </View>
-        )
-      }
+      {isFlipped && <RatingButtons onRate={handleRate} />}
     </View>
   )
 }
