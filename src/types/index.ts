@@ -18,6 +18,7 @@ export interface Deck {
   name: string
   createdAt: number
   cards: Card[]
+  favorited?: boolean
 }
 
 export interface ReviewRecord {
