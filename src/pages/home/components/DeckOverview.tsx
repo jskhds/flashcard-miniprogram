@@ -8,36 +8,42 @@ interface DeckOverviewProps {
   decks: Deck[]
   onEdit: (deck: Deck) => void
   onDelete: (deck: Deck) => void
+  onFavorite: (deck: Deck) => void
 }
 
-export default function DeckOverview({ decks, onEdit, onDelete }: DeckOverviewProps) {
+export default function DeckOverview({ decks, onEdit, onDelete, onFavorite }: DeckOverviewProps) {
   const { swipeOpen, setSwipeOpen, handleTouchStart, handleTouchEnd } = useSwipeGesture()
 
-  if (decks.length === 0) {
+  const favoritedDecks = decks.filter(d => d.favorited)
+
+  if (favoritedDecks.length === 0) {
     return (
-      <View className='home-empty'>
-        <Text className='home-empty__emoji'>📚</Text>
-        <Text className='home-empty__title'>还没有卡组</Text>
-        <Text className='home-empty__desc'>创建你的第一个闪卡卡组，开始高效学习</Text>
+      <View className='home-decks'>
+        <View className='home-section-header'>
+          <Text className='home-section-title'><Text style={{ color: '#F4845F' }}>★</Text> 收藏的卡组</Text>
+          <Text className='home-section-more' onClick={() => Taro.switchTab({ url: '/pages/decks/index' })}>
+            去卡组列表
+          </Text>
+        </View>
+        <View className='home-empty'>
+          <Text className='home-empty__emoji'>⭐</Text>
+          <Text className='home-empty__title'>还没有收藏的卡组</Text>
+          <Text className='home-empty__desc'>在卡组列表点击 ☆ 收藏常用卡组</Text>
+        </View>
       </View>
     )
   }
 
-  const previewDecks = decks.slice(0, 3)
-
   return (
     <View className='home-decks'>
       <View className='home-section-header'>
-        <Text className='home-section-title'>★ 收藏的卡组</Text>
-        <Text
-          className='home-section-more'
-          onClick={() => Taro.switchTab({ url: '/pages/decks/index' })}
-        >
+        <Text className='home-section-title'><Text style={{ color: '#F4845F' }}>★</Text> 收藏的卡组</Text>
+        <Text className='home-section-more' onClick={() => Taro.switchTab({ url: '/pages/decks/index' })}>
           查看全部
         </Text>
       </View>
 
-      {previewDecks.map(deck => (
+      {favoritedDecks.map(deck => (
         <DeckCard
           key={deck.id}
           deck={deck}
@@ -47,6 +53,7 @@ export default function DeckOverview({ decks, onEdit, onDelete }: DeckOverviewPr
           onClose={() => setSwipeOpen(null)}
           onEdit={onEdit}
           onDelete={onDelete}
+          onFavorite={onFavorite}
           showFooter
         />
       ))}

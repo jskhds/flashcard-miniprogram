@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import Taro from '@tarojs/taro'
 import { View, Text } from '@tarojs/components'
-import { getDecks, setReviewSession, getStreak } from '@/utils/storage'
+import { getDecks, saveDecks, setReviewSession, getStreak } from '@/utils/storage'
 import { isDue, getDeckStats } from '@/utils/sm2'
 import { Deck } from '@/types'
 import { useDeckCRUD } from '@/hooks/useDeckCRUD'
@@ -18,7 +18,7 @@ export default function Home() {
   const {
     showModal, editingDeck, modalName, nameError,
     setModalName, setNameError,
-    openCreate, openEdit, closeModal, handleSave, handleDelete,
+    openEdit, closeModal, handleSave, handleDelete,
   } = useDeckCRUD(loadData)
 
   Taro.useDidShow(() => { loadData() })
@@ -29,6 +29,16 @@ export default function Home() {
     const dueCount = allDecks.reduce((sum, d) => sum + d.cards.filter(c => isDue(c)).length, 0)
     setTodayCount(dueCount)
     setStreak(getStreak().current)
+  }
+
+  function handleFavorite(deck: Deck) {
+    const allDecks = getDecks()
+    const target = allDecks.find(d => d.id === deck.id)
+    if (target) {
+      target.favorited = !target.favorited
+      saveDecks(allDecks)
+      loadData()
+    }
   }
 
   function handleStartReview() {
@@ -63,6 +73,7 @@ export default function Home() {
         decks={decks}
         onEdit={openEdit}
         onDelete={handleDelete}
+        onFavorite={handleFavorite}
       />
       <View className='home-bottom'>
         <View
@@ -72,9 +83,6 @@ export default function Home() {
           <Text className='home-review-btn__text'>
             {todayCount === 0 ? '今日无到期卡片' : `▶ 开始今日复习`}
           </Text>
-        </View>
-        <View className='home-create-btn' onClick={openCreate}>
-          <Text className='home-create-btn__text'>⊕ 新建卡组</Text>
         </View>
       </View>
       {showModal && (
