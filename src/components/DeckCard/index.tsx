@@ -12,6 +12,7 @@ interface DeckCardProps {
   onClose: () => void
   onEdit: (deck: Deck) => void
   onDelete: (deck: Deck) => void
+  onFavorite?: (deck: Deck) => void
   showFooter?: boolean
 }
 
@@ -31,7 +32,7 @@ function getRateColor(rate: number): string {
 }
 
 export default function DeckCard({
-  deck, isOpen, onTouchStart, onTouchEnd, onClose, onEdit, onDelete, showFooter = false
+  deck, isOpen, onTouchStart, onTouchEnd, onClose, onEdit, onDelete, onFavorite, showFooter = false
 }: DeckCardProps) {
   const stats = getDeckStats(deck)
   const fuzzy = deck.cards.filter(c => getDisplayStatus(c) === '模糊').length
@@ -62,8 +63,13 @@ export default function DeckCard({
           <View className='deck-card__top-right'>
             {!showFooter && <Text className='deck-card__count'>{stats.total} 张</Text>}
             {showFooter && (
-              <View className='deck-card__star'>
-                <Text className='deck-card__star-icon'>☆</Text>
+              <View
+                className='deck-card__star'
+                onClick={(e) => { e.stopPropagation(); onFavorite?.(deck) }}
+              >
+                <Text className={`deck-card__star-icon ${deck.favorited ? 'deck-card__star-icon--active' : ''}`}>
+                  {deck.favorited ? '★' : '☆'}
+                </Text>
               </View>
             )}
           </View>

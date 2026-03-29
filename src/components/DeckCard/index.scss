@@ -75,6 +75,10 @@
   font-size: 36rpx;
   color: $text-muted;
   line-height: 1;
+
+  &--active {
+    color: #F4845F;
+  }
 }
 
 // ─── Progress ──────────────────────────────────────────────────────────────
