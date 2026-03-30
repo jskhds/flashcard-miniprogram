@@ -40,7 +40,4 @@
 - 不要提交 `.claude/settings.local.json`
 - 不要提交 `.env`、`.env.local` 等敏感文件
 - 每个 commit 聚焦单一职责，message 准确描述实际变更
-- 在每个 commit message 末尾附上：
-  ```
-  Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
-  ```
+ 
