@@ -85,6 +85,39 @@
   gap: $gap-sm;
 }
 
+.home-section-title {
+  font-size: $font-size-base;
+  font-weight: $font-weight-bold;
+  color: $text-primary;
+}
+
+// ─── No Favorited State ────────────────────────────────────────────────────
+.home-no-fav {
+  @include flex-col;
+  align-items: center;
+  padding: $gap-xl $gap-lg;
+  gap: $gap-md;
+  background: $bg-card;
+  border-radius: $radius-card;
+}
+
+.home-no-fav__emoji {
+  font-size: 72rpx;
+}
+
+.home-no-fav__title {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $text-primary;
+}
+
+.home-no-fav__desc {
+  font-size: $font-size-sm;
+  color: $text-muted;
+  text-align: center;
+  line-height: $line-height-relaxed;
+}
+
 // ─── Empty State ───────────────────────────────────────────────────────────
 .home-empty {
   @include flex-col;

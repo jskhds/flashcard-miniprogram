@@ -13,7 +13,7 @@ export default function TodayStats({ todayCount, streak, deckCount, totalCards, 
     <View className='home-hero'>
       <View className='home-hero__top'>
         <Text className='home-hero__due'>
-          今日待复习 <Text className='home-hero__due-num'>{todayCount}</Text> 张
+          今日待学习 <Text className='home-hero__due-num'>{todayCount}</Text> 张
         </Text>
         <View className='home-hero__streak'>
           <Text className='home-hero__streak-text'>🔥 {streak} 天连续</Text>

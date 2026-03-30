@@ -34,16 +34,32 @@
   color: $text-muted;
 }
 
-.home-deck-row__badge {
+.home-deck-row__badges {
+  display: flex;
+  gap: $gap-xs;
   flex-shrink: 0;
   margin-left: $gap-md;
+}
+
+.home-deck-row__badge {
   border-radius: $radius-full;
-  padding: 8rpx 24rpx;
-  background: #FFF0EB;
+  padding: 8rpx 20rpx;
+
+  &--due {
+    background: #FFF0EB;
+  }
+
+  &--new {
+    background: #EBF5F0;
+  }
 }
 
 .home-deck-row__badge-text {
   font-size: $font-size-sm;
   font-weight: $font-weight-medium;
-  color: #F4845F;
+  color: $accent;
+
+  &--new {
+    color: $status-know;
+  }
 }
