@@ -66,21 +66,19 @@
   color: $text-muted;
 }
 
-.deck-card__pin {
-  width: 40rpx;
-  height: 40rpx;
+.deck-card__star {
+  width: 48rpx;
+  height: 48rpx;
   @include flex-center;
 }
 
-.deck-card__pin-arrow {
-  width: 0;
-  height: 0;
-  border-left: 9rpx solid transparent;
-  border-right: 9rpx solid transparent;
-  border-bottom: 13rpx solid $text-muted;
+.deck-card__star-icon {
+  font-size: 36rpx;
+  color: $text-muted;
+  line-height: 1;
 
   &--active {
-    border-bottom-color: $accent;
+    color: $accent;
   }
 }
 

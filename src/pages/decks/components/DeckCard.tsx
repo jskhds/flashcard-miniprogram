@@ -67,10 +67,12 @@ export default function DeckCard({
             {!showFooter && <Text className='deck-card__count'>{stats.total} 张</Text>}
             {showFooter && (
               <View
-                className='deck-card__pin'
+                className='deck-card__star'
                 onClick={(e) => { e.stopPropagation(); onFavorite?.(deck) }}
               >
-                <View className={`deck-card__pin-arrow ${deck.favorited ? 'deck-card__pin-arrow--active' : ''}`} />
+                <Text className={`deck-card__star-icon ${deck.favorited ? 'deck-card__star-icon--active' : ''}`}>
+                  {deck.favorited ? '★' : '☆'}
+                </Text>
               </View>
             )}
           </View>

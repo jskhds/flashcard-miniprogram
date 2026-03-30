@@ -18,10 +18,10 @@ export default function Decks() {
   function handleFavorite(deck: Deck) {
     if (deck.favorited) {
       Taro.showModal({
-        title: '取消置顶',
-        content: `确认将「${deck.name}」从置顶中移除？`,
+        title: '移出学习计划',
+        content: `将「${deck.name}」从每日学习计划中移除？`,
         cancelText: '取消',
-        confirmText: '取消置顶',
+        confirmText: '移出',
         confirmColor: '#FF3B30',
         success: (res) => {
           if (res.confirm) {
@@ -34,7 +34,12 @@ export default function Decks() {
     } else {
       const allDecks = getDecks()
       const target = allDecks.find(d => d.id === deck.id)
-      if (target) { target.favorited = true; saveDecks(allDecks); refresh() }
+      if (target) {
+        target.favorited = true
+        saveDecks(allDecks)
+        refresh()
+        Taro.showToast({ title: '已加入学习计划', icon: 'none', duration: 1500 })
+      }
     }
   }
 
