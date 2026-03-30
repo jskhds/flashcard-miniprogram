@@ -26,6 +26,26 @@ export default function CardEdit() {
 
   const isValid = front.trim().length > 0 && back.trim().length > 0
 
+  function handleSaveAndContinue() {
+    if (!isValid) return
+    const allDecks = getDecks()
+    const deck = allDecks.find(d => d.id === deckId)
+    if (!deck) { Taro.showToast({ title: '卡组不存在', icon: 'none' }); return }
+
+    const trimmedFront = front.trim()
+    if (deck.cards.some(c => c.front === trimmedFront)) {
+      setFrontError('该卡组内已有相同正面内容的卡片')
+      return
+    }
+
+    deck.cards.push(createCard(trimmedFront, back.trim()))
+    saveDecks(allDecks)
+    Taro.showToast({ title: '已创建，继续添加', icon: 'success' })
+    setFront('')
+    setBack('')
+    setFrontError('')
+  }
+
   function handleSave() {
     if (!isValid) return
     const allDecks = getDecks()
@@ -81,6 +101,7 @@ export default function CardEdit() {
       onFrontChange={(val) => { setFront(val); setFrontError('') }}
       onBackChange={setBack}
       onSave={handleSave}
+      onSaveAndContinue={handleSaveAndContinue}
       onDelete={handleDelete}
     />
   )

@@ -73,6 +73,16 @@
   color: $status-unknown;
 }
 
+// ─── Bottom Bar ────────────────────────────────────────────────────────────
+.card-edit-bottom {
+  position: fixed;
+  left: $page-padding;
+  right: $page-padding;
+  bottom: calc(#{$gap-lg} + env(safe-area-inset-bottom));
+  display: flex;
+  gap: $gap-sm;
+}
+
 // ─── Save Button ───────────────────────────────────────────────────────────
 .card-edit-save-btn {
   position: fixed;
@@ -88,6 +98,25 @@
 
   &:active {
     opacity: 0.85;
+  }
+
+  // Inside .card-edit-bottom: override fixed positioning
+  .card-edit-bottom & {
+    position: static;
+    flex: 1;
+  }
+
+  &--secondary {
+    background: $bg-surface;
+    box-shadow: none;
+
+    .card-edit-save-btn__text {
+      color: $text-secondary;
+    }
+  }
+
+  &--primary {
+    flex: 1.4 !important;
   }
 
   &--disabled {

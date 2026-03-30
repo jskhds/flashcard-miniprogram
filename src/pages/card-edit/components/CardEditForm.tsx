@@ -9,6 +9,7 @@ interface CardEditFormProps {
   onFrontChange: (val: string) => void
   onBackChange: (val: string) => void
   onSave: () => void
+  onSaveAndContinue?: () => void
   onDelete?: () => void
 }
 
@@ -21,6 +22,7 @@ export default function CardEditForm({
   onFrontChange,
   onBackChange,
   onSave,
+  onSaveAndContinue,
   onDelete,
 }: CardEditFormProps) {
   return (
@@ -58,14 +60,29 @@ export default function CardEditForm({
         </View>
       )}
 
-      <View
-        className={`card-edit-save-btn ${!isValid ? 'card-edit-save-btn--disabled' : ''}`}
-        onClick={onSave}
-      >
-        <Text className='card-edit-save-btn__text'>
-          {isEdit ? '保存' : '创建卡片'}
-        </Text>
-      </View>
+      {isEdit ? (
+        <View
+          className={`card-edit-save-btn ${!isValid ? 'card-edit-save-btn--disabled' : ''}`}
+          onClick={onSave}
+        >
+          <Text className='card-edit-save-btn__text'>保存</Text>
+        </View>
+      ) : (
+        <View className='card-edit-bottom'>
+          <View
+            className={`card-edit-save-btn card-edit-save-btn--secondary ${!isValid ? 'card-edit-save-btn--disabled' : ''}`}
+            onClick={onSaveAndContinue}
+          >
+            <Text className='card-edit-save-btn__text'>保存并继续</Text>
+          </View>
+          <View
+            className={`card-edit-save-btn card-edit-save-btn--primary ${!isValid ? 'card-edit-save-btn--disabled' : ''}`}
+            onClick={onSave}
+          >
+            <Text className='card-edit-save-btn__text'>创建卡片</Text>
+          </View>
+        </View>
+      )}
     </View>
   )
 }
