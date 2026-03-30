@@ -9,7 +9,7 @@ interface BottomBarProps {
 }
 
 export default function BottomBar({ count, filter, disabled, ready = true, onStartReview }: BottomBarProps) {
-  const label = filter === '未学' ? '开始学习' : '开始复习'
+  const label = (filter === '未学' || filter === '全部') ? '开始学习' : '开始复习'
   return (
     <View className={`cards-bottom${ready ? '' : ' cards-bottom--entering'}`}>
       <View

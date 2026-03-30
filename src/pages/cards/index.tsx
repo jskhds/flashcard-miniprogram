@@ -40,8 +40,11 @@ export default function Cards() {
 
   const masteredCount = statusCounts['掌握'] || 0
   const dueCount = cards.filter(isDue).length
-  const filteredCards = (filter === '全部' ? cards : cards.filter(c => getDisplayStatus(c) === filter))
-    .filter(c => !search || c.front.includes(search) || c.back.includes(search))
+  const filteredCards = (
+    filter === '全部'
+      ? cards.filter(c => c.repetitions === 0 || isDue(c))
+      : cards.filter(c => getDisplayStatus(c) === filter)
+  ).filter(c => !search || c.front.includes(search) || c.back.includes(search))
 
   function handleDelete(cardId: string) {
     Taro.showModal({
