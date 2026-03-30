@@ -1,46 +1,52 @@
 import { useState } from 'react'
 import Taro from '@tarojs/taro'
 import { View, Text } from '@tarojs/components'
-import { getReviewHistory, getDecks, getDateStr } from '@/utils/storage'
+import { getDecks, getStreak, getReviewHistory, getDateStr } from '@/utils/storage'
 import { getDisplayStatus } from '@/utils/sm2'
 import { ReviewRecord } from '@/types'
-import StatsOverview from './components/StatsOverview'
-import LineChart from './components/LineChart'
-import DeckMasteryBars from './components/DeckMasteryBars'
+import StreakOverview from './components/StreakOverview'
+import ProgressBreakdown from './components/ProgressBreakdown'
+import UpcomingReviews from './components/UpcomingReviews'
 import CalendarHeatmap from './components/CalendarHeatmap'
 import './index.scss'
 
-type Period = '7天' | '30天'
+function tsToDateStr(ts: number): string {
+  const d = new Date(ts)
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+}
 
 export default function Stats() {
-  const [period, setPeriod] = useState<Period>('7天')
-  const [reviewHistory, setReviewHistory] = useState<ReviewRecord[]>([])
   const [decks, setDecks] = useState(() => getDecks())
+  const [streak, setStreak] = useState(() => getStreak())
+  const [reviewHistory, setReviewHistory] = useState<ReviewRecord[]>(() => getReviewHistory())
 
   Taro.useDidShow(() => {
-    setReviewHistory(getReviewHistory())
     setDecks(getDecks())
+    setStreak(getStreak())
+    setReviewHistory(getReviewHistory())
   })
 
-  const days = period === '7天' ? 7 : 30
-  const dateRange = Array.from({ length: days }, (_, i) => getDateStr(-(days - 1 - i)))
-  const historyMap = reviewHistory.reduce((acc, r) => { acc[r.date] = r.count; return acc }, {} as Record<string, number>)
+  const allCards = decks.flatMap(d => d.cards)
+  const total = allCards.length
+  const newCount = allCards.filter(c => getDisplayStatus(c) === '未学').length
+  const unknown = allCards.filter(c => getDisplayStatus(c) === '不会').length
+  const fuzzy = allCards.filter(c => getDisplayStatus(c) === '模糊').length
+  const mastered = allCards.filter(c => getDisplayStatus(c) === '掌握').length
+  const masteryRate = total > 0 ? Math.round((mastered / total) * 100) : 0
 
-  const chartData = dateRange.map(date => ({
-    date,
-    count: historyMap[date] || 0,
-    label: date.slice(5).replace('-', '/'),
-  }))
-
-  const totalReviewed = chartData.reduce((s, d) => s + d.count, 0)
-  const activeDays = chartData.filter(d => d.count > 0).length
-  const dailyAvg = activeDays > 0 ? Math.round(totalReviewed / activeDays) : 0
-
-  const deckStats = decks.map(deck => {
-    const total = deck.cards.length
-    if (total === 0) return { name: deck.name, rate: 0, total, mastered: 0 }
-    const mastered = deck.cards.filter(c => getDisplayStatus(c) === '掌握').length
-    return { name: deck.name, rate: Math.round((mastered / total) * 100), total, mastered }
+  const upcoming = Array.from({ length: 7 }, (_, i) => {
+    const dateStr = getDateStr(i)
+    const prevDateStr = i === 0 ? '' : getDateStr(i - 1)
+    const count = allCards.filter(c => {
+      if (c.repetitions === 0) return false
+      const d = tsToDateStr(c.nextReview)
+      return i === 0 ? d <= dateStr : d > prevDateStr && d <= dateStr
+    }).length
+    return {
+      label: i === 0 ? '今' : i === 1 ? '明' : `+${i}`,
+      count,
+      isToday: i === 0,
+    }
   })
 
   const now = new Date()
@@ -48,6 +54,7 @@ export default function Stats() {
   const month = now.getMonth()
   const daysInMonth = new Date(year, month + 1, 0).getDate()
   const firstDayOfWeek = new Date(year, month, 1).getDay()
+  const historyMap = reviewHistory.reduce((acc, r) => { acc[r.date] = r.count; return acc }, {} as Record<string, number>)
   const calendarDays = Array.from({ length: daysInMonth }, (_, i) => {
     const d = i + 1
     const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`
@@ -61,21 +68,9 @@ export default function Stats() {
         <Text className='stats-title'>学习统计</Text>
       </View>
 
-      <View className='stats-toggle'>
-        {(['7天', '30天'] as Period[]).map(p => (
-          <View
-            key={p}
-            className={`stats-toggle-btn ${period === p ? 'stats-toggle-btn--active' : ''}`}
-            onClick={() => setPeriod(p)}
-          >
-            <Text className='stats-toggle-btn__text'>{p}</Text>
-          </View>
-        ))}
-      </View>
-
-      <StatsOverview totalReviewed={totalReviewed} activeDays={activeDays} dailyAvg={dailyAvg} />
-      <LineChart chartData={chartData} days={days} />
-      <DeckMasteryBars deckStats={deckStats} />
+      <StreakOverview current={streak.current} longest={streak.longest} masteryRate={masteryRate} />
+      <ProgressBreakdown newCount={newCount} unknown={unknown} fuzzy={fuzzy} mastered={mastered} />
+      <UpcomingReviews items={upcoming} />
       <CalendarHeatmap
         year={year}
         month={month}
