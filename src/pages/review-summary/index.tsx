@@ -56,11 +56,7 @@ export default function ReviewSummary() {
   }
 
   function handleBack() {
-    if (data?.deckId) {
-      Taro.navigateTo({ url: `/pages/cards/index?deckId=${data.deckId}` })
-    } else {
-      Taro.switchTab({ url: '/pages/home/index' })
-    }
+    Taro.navigateBack()
   }
 
   return (

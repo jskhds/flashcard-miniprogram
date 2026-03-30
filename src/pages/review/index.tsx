@@ -74,7 +74,7 @@ export default function Review() {
 
   return (
     <View className='review-page'>
-      <ReviewProgress current={currentIndex + 1} total={cards.length} progress={progress} />
+      {cards.length > 1 && <ReviewProgress current={currentIndex + 1} total={cards.length} progress={progress} />}
       <ReviewCard
         card={currentCard}
         isFlipped={isFlipped}
