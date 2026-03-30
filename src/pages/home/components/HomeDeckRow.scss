@@ -1,0 +1,49 @@
+@import '../../../styles/tokens.scss';
+
+.home-deck-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #FFFFFF;
+  border-radius: $radius-card;
+  padding: $gap-md $gap-lg;
+  box-shadow: 0 2rpx 12rpx rgba(0, 0, 0, 0.06);
+
+  &:active {
+    opacity: 0.9;
+  }
+}
+
+.home-deck-row__info {
+  display: flex;
+  flex-direction: column;
+  gap: 4rpx;
+  flex: 1;
+  min-width: 0;
+}
+
+.home-deck-row__name {
+  font-size: $font-size-base;
+  font-weight: $font-weight-semibold;
+  color: $text-primary;
+  @include text-overflow;
+}
+
+.home-deck-row__sub {
+  font-size: $font-size-xs;
+  color: $text-muted;
+}
+
+.home-deck-row__badge {
+  flex-shrink: 0;
+  margin-left: $gap-md;
+  border-radius: $radius-full;
+  padding: 8rpx 24rpx;
+  background: #FFF0EB;
+}
+
+.home-deck-row__badge-text {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-medium;
+  color: #F4845F;
+}
