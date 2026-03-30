@@ -1,4 +1,4 @@
-@import '../../styles/tokens.scss';
+@import '../../../styles/tokens.scss';
 
 .deck-card-wrapper {
   position: relative;
@@ -18,6 +18,7 @@
 
   &--swiped {
     transform: translateX(-192rpx);
+    border-radius: $radius-card 0 0 $radius-card;
     pointer-events: none;
   }
 
@@ -65,19 +66,21 @@
   color: $text-muted;
 }
 
-.deck-card__star {
+.deck-card__pin {
   width: 40rpx;
   height: 40rpx;
   @include flex-center;
 }
 
-.deck-card__star-icon {
-  font-size: 36rpx;
-  color: $text-muted;
-  line-height: 1;
+.deck-card__pin-arrow {
+  width: 0;
+  height: 0;
+  border-left: 9rpx solid transparent;
+  border-right: 9rpx solid transparent;
+  border-bottom: 13rpx solid $text-muted;
 
   &--active {
-    color: #F4845F;
+    border-bottom-color: $accent;
   }
 }
 
@@ -141,6 +144,7 @@
   border-radius: $radius-full;
   flex-shrink: 0;
 
+  &--new     { background: $status-new; }
   &--know    { background: $status-know; }
   &--fuzzy   { background: $accent; }
   &--unknown { background: $status-unknown; }

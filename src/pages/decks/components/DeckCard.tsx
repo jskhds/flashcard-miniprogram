@@ -2,12 +2,13 @@ import Taro from '@tarojs/taro'
 import { View, Text } from '@tarojs/components'
 import { Deck } from '@/types'
 import { getDeckStats, getDisplayStatus } from '@/utils/sm2'
-import './index.scss'
+import './DeckCard.scss'
 
 interface DeckCardProps {
   deck: Deck
   isOpen: boolean
   onTouchStart: (e: any) => void
+  onTouchMove: (e: any) => void
   onTouchEnd: (e: any) => void
   onClose: () => void
   onEdit: (deck: Deck) => void
@@ -32,9 +33,10 @@ function getRateColor(rate: number): string {
 }
 
 export default function DeckCard({
-  deck, isOpen, onTouchStart, onTouchEnd, onClose, onEdit, onDelete, onFavorite, showFooter = false
+  deck, isOpen, onTouchStart, onTouchMove, onTouchEnd, onClose, onEdit, onDelete, onFavorite, showFooter = false
 }: DeckCardProps) {
   const stats = getDeckStats(deck)
+  const newCards = deck.cards.filter(c => getDisplayStatus(c) === '未学').length
   const fuzzy = deck.cards.filter(c => getDisplayStatus(c) === '模糊').length
   const unknown = deck.cards.filter(c => getDisplayStatus(c) === '不会').length
   const rateColor = getRateColor(stats.rate)
@@ -43,6 +45,7 @@ export default function DeckCard({
     <View
       className='deck-card-wrapper'
       onTouchStart={onTouchStart}
+      onTouchMove={onTouchMove}
       onTouchEnd={onTouchEnd}
     >
       <View
@@ -64,12 +67,10 @@ export default function DeckCard({
             {!showFooter && <Text className='deck-card__count'>{stats.total} 张</Text>}
             {showFooter && (
               <View
-                className='deck-card__star'
+                className='deck-card__pin'
                 onClick={(e) => { e.stopPropagation(); onFavorite?.(deck) }}
               >
-                <Text className={`deck-card__star-icon ${deck.favorited ? 'deck-card__star-icon--active' : ''}`}>
-                  {deck.favorited ? '★' : '☆'}
-                </Text>
+                <View className={`deck-card__pin-arrow ${deck.favorited ? 'deck-card__pin-arrow--active' : ''}`} />
               </View>
             )}
           </View>
@@ -95,6 +96,10 @@ export default function DeckCard({
 
         {showFooter && (
           <View className='deck-card__stats'>
+            <View className='deck-card__stat-item'>
+              <View className='deck-card__stat-dot deck-card__stat-dot--new' />
+              <Text className='deck-card__stat-text'>未学 {newCards}</Text>
+            </View>
             <View className='deck-card__stat-item'>
               <View className='deck-card__stat-dot deck-card__stat-dot--know' />
               <Text className='deck-card__stat-text'>掌握 {stats.mastered}</Text>
