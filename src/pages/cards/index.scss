@@ -4,7 +4,9 @@
   @include page-container;
   @include flex-col;
   gap: $gap-md;
-  padding-bottom: 180rpx;
+  height: 100vh;
+  padding-bottom: 0;
+  box-sizing: border-box;
 }
 
 // ─── Header ────────────────────────────────────────────────────────────────
@@ -136,9 +138,27 @@
   color: $text-muted;
 }
 
+// ─── Search ────────────────────────────────────────────────────────────────
+.cards-search {
+  background: $bg-surface;
+  border-radius: $radius-btn;
+  padding: 0 $gap-md;
+  height: 72rpx;
+  @include flex-center;
+  flex-shrink: 0;
+}
+
+.cards-search__input {
+  flex: 1;
+  font-size: $font-size-md;
+  color: $text-primary;
+  height: 100%;
+}
+
 // ─── Card List ─────────────────────────────────────────────────────────────
 .cards-list {
   flex: 1;
+  height: 0;
 }
 
 .card-item-wrapper {
@@ -279,14 +299,16 @@
 
 // ─── Bottom Buttons ────────────────────────────────────────────────────────
 .cards-bottom {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: $gap-md $page-padding;
-  padding-bottom: calc(#{$gap-md} + env(safe-area-inset-bottom));
+  padding: $gap-sm 0;
+  padding-bottom: calc(#{$gap-sm} + env(safe-area-inset-bottom));
   background: $bg-base;
   display: flex;
+  flex-shrink: 0;
+
+  &--entering {
+    opacity: 0;
+    pointer-events: none;
+  }
 }
 
 .cards-btn {
