@@ -1,4 +1,4 @@
-import { View, Text } from '@tarojs/components'
+import { View, Text, ScrollView } from '@tarojs/components'
 import { Card } from '@/types'
 
 interface ReviewCardProps {
@@ -6,6 +6,19 @@ interface ReviewCardProps {
   isFlipped: boolean
   isSliding: boolean
   onFlip: () => void
+}
+
+function getFrontFontSize(len: number): string {
+  if (len > 80) return '28rpx'
+  if (len > 40) return '36rpx'
+  return '48rpx'
+}
+
+function getAnswerFontSize(len: number): string {
+  if (len > 80) return '28rpx'
+  if (len > 40) return '36rpx'
+  if (len > 20) return '48rpx'
+  return '64rpx'
 }
 
 export default function ReviewCard({ card, isFlipped, isSliding, onFlip }: ReviewCardProps) {
@@ -18,7 +31,13 @@ export default function ReviewCard({ card, isFlipped, isSliding, onFlip }: Revie
           <View className='review-card__face review-card__front'>
             <View className='review-card__deco review-card__deco--tr' />
             <View className='review-card__deco review-card__deco--bl' />
-            <Text className='review-card__content'>{card.front}</Text>
+            <ScrollView scrollY className='review-card__scroll'>
+              <View className='review-card__scroll-inner'>
+                <Text className='review-card__content' style={{ fontSize: getFrontFontSize(card.front.length) }}>
+                  {card.front}
+                </Text>
+              </View>
+            </ScrollView>
           </View>
           <View className='review-card__face review-card__back'>
             <View className='review-card__back-question'>
@@ -26,11 +45,17 @@ export default function ReviewCard({ card, isFlipped, isSliding, onFlip }: Revie
                 <View className='review-card__back-label-bar' />
                 <Text className='review-card__back-label'>问题</Text>
               </View>
-              <Text className='review-card__back-question-text'>{card.front}</Text>
+              <Text className='review-card__back-question-text' style={{ fontSize: getFrontFontSize(card.front.length) }}>{card.front}</Text>
             </View>
             <View className='review-card__back-answer'>
               <View className='review-card__deco review-card__deco--tr' />
-              <Text className='review-card__back-answer-text'>{card.back}</Text>
+              <ScrollView scrollY className='review-card__scroll'>
+                <View className='review-card__scroll-inner'>
+                  <Text className='review-card__back-answer-text' style={{ fontSize: getAnswerFontSize(card.back.length) }}>
+                    {card.back}
+                  </Text>
+                </View>
+              </ScrollView>
             </View>
           </View>
         </View>

@@ -105,7 +105,6 @@
 
 .review-card__front {
   @include flex-col;
-  justify-content: center;
   transition: opacity 0s ease 0.2s;
 
   .review-card--flipped & {
@@ -127,6 +126,9 @@
   gap: $gap-xs;
   border-radius: $radius-card $radius-card 0 0;
   border-bottom: 2rpx solid $border-light;
+  max-height: 240rpx;
+  overflow: hidden;
+  flex-shrink: 0;
 }
 
 .review-card__back-label-row {
@@ -160,12 +162,13 @@
 
 .review-card__back-answer {
   flex: 1;
-  @include flex-center;
-  padding: $gap-lg;
+  @include flex-col;
+  height: 0;
   background: $bg-card;
   border-radius: 0 0 $radius-card $radius-card;
   overflow: hidden;
   position: relative;
+  padding: $gap-md $gap-lg;
 }
 
 .review-card__back-answer-text {
@@ -174,6 +177,21 @@
   font-weight: $font-weight-bold;
   text-align: center;
   line-height: $line-height-base;
+  display: block;
+}
+
+.review-card__scroll {
+  flex: 1;
+  height: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.review-card__scroll-inner {
+  min-height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .review-card__content {
@@ -182,12 +200,7 @@
   font-weight: $font-weight-medium;
   line-height: $line-height-relaxed;
   text-align: center;
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  z-index: 1;
+  display: block;
 }
 
 // ─── Decorative Circles ────────────────────────────────────────────────────
