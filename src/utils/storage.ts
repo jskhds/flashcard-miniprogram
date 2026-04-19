@@ -160,6 +160,27 @@ export function clearSummaryResults(): void {
   } catch {}
 }
 
+// ─── Favorited Deck IDs（本地持久化，不走后端）────────────────────────────────
+
+const FAV_KEY = 'flashcard_favorited_ids'
+
+export function getFavoritedIds(): string[] {
+  try {
+    const data = Taro.getStorageSync(FAV_KEY)
+    return data ? JSON.parse(data) : []
+  } catch {
+    return []
+  }
+}
+
+export function setFavoritedIds(ids: string[]): void {
+  try {
+    Taro.setStorageSync(FAV_KEY, JSON.stringify(ids))
+  } catch (e) {
+    console.error('setFavoritedIds error', e)
+  }
+}
+
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 
 export function getTodayStr(): string {
