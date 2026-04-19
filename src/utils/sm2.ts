@@ -66,7 +66,7 @@ export function calculateNextReview(card: Card, q: ReviewQuality): Card {
 /**
  * 从 SM-2 数据派生展示状态
  */
-export function getDisplayStatus(card: Card): DisplayStatus {
+export function getDisplayStatus(card: { repetitions: number; interval: number }): DisplayStatus {
   if (card.repetitions === 0) return '未学'
   if (card.interval <= 1) return '不会'
   if (card.interval <= 3) return '模糊'
