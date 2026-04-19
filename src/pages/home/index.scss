@@ -1,0 +1,339 @@
+@import '../../styles/tokens.scss';
+
+.home-page {
+  @include page-container;
+  @include flex-col;
+  gap: $gap-lg;
+}
+
+// ─── Header ────────────────────────────────────────────────────────────────
+.home-header {
+  @include flex-col;
+  gap: $gap-sm;
+}
+
+.home-greeting {
+  @include flex-between;
+  align-items: center;
+}
+
+.home-greeting__title {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-bold;
+  color: $text-secondary;
+  letter-spacing: 0.02em;
+}
+
+.home-streak {
+  display: flex;
+  align-items: center;
+  gap: 6rpx;
+  background: rgba($accent, 0.1);
+  border-radius: $radius-full;
+  padding: 8rpx 20rpx;
+}
+
+.home-streak__fire {
+  font-size: $font-size-sm;
+}
+
+.home-streak__text {
+  font-size: $font-size-sm;
+  color: $accent;
+  font-weight: $font-weight-semibold;
+}
+
+.home-count {
+  display: flex;
+  align-items: baseline;
+  gap: 12rpx;
+}
+
+.home-count__number {
+  font-size: 120rpx;
+  font-weight: $font-weight-bold;
+  color: $accent;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.home-count__label {
+  font-size: $font-size-lg;
+  color: $text-muted;
+  font-weight: $font-weight-regular;
+}
+
+// ─── Review Button ─────────────────────────────────────────────────────────
+.home-review-btn {
+  @include flex-center;
+  background: $accent;
+  border-radius: $radius-btn;
+  height: 96rpx;
+  box-shadow: $shadow-card;
+  transition: opacity $transition-fast;
+
+  &:active {
+    opacity: 0.85;
+  }
+
+  &--disabled {
+    background: $bg-surface;
+    box-shadow: none;
+
+    .home-review-btn__text {
+      color: $text-muted;
+    }
+  }
+}
+
+.home-review-btn__text {
+  font-size: $font-size-base;
+  font-weight: $font-weight-semibold;
+  color: $text-inverse;
+  letter-spacing: 0.02em;
+}
+
+// ─── Stats Bar ─────────────────────────────────────────────────────────────
+.home-stats {
+  display: flex;
+  align-items: center;
+  background: $bg-card;
+  border-radius: $radius-card;
+  padding: $gap-md $gap-lg;
+}
+
+.home-stats__item {
+  flex: 1;
+  @include flex-col;
+  align-items: center;
+  gap: 4rpx;
+}
+
+.home-stats__value {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  color: $text-primary;
+  line-height: 1.2;
+}
+
+.home-stats__label {
+  font-size: $font-size-sm;
+  color: $text-muted;
+}
+
+.home-stats__divider {
+  width: 2rpx;
+  height: 48rpx;
+  background: $border-color;
+}
+
+// ─── Decks Section ─────────────────────────────────────────────────────────
+.home-section-header {
+  @include flex-between;
+  margin-bottom: $gap-md;
+}
+
+.home-section-title {
+  font-size: $font-size-base;
+  font-weight: $font-weight-semibold;
+  color: $text-primary;
+}
+
+.home-section-more {
+  font-size: $font-size-sm;
+  color: $accent;
+  font-weight: $font-weight-medium;
+}
+
+.home-deck-card-wrapper {
+  position: relative;
+  margin-bottom: $gap-sm;
+  border-radius: $radius-card;
+  overflow: hidden;
+}
+
+.home-deck-card {
+  position: relative;
+  z-index: 1;
+  background: $bg-card;
+  border-radius: $radius-card;
+  padding: $gap-md $gap-lg;
+  box-shadow: $shadow-sm;
+  transition: transform 0.25s ease;
+
+  &--swiped {
+    transform: translateX(-192rpx);
+  }
+
+  &:active {
+    opacity: 0.9;
+  }
+}
+
+.home-deck-swipe-actions {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  z-index: 0;
+}
+
+.home-deck-swipe-btn {
+  width: 96rpx;
+  @include flex-center;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+
+  &:active {
+    opacity: 0.8;
+  }
+
+  &--edit {
+    background: $bg-surface-2;
+    color: $text-primary;
+  }
+
+  &--delete {
+    background: $status-unknown;
+    color: $text-inverse;
+    border-radius: 0 $radius-card $radius-card 0;
+  }
+}
+
+.home-deck-card__top {
+  @include flex-between;
+  margin-bottom: $gap-md;
+}
+
+.home-deck-card__name {
+  font-size: $font-size-base;
+  font-weight: $font-weight-semibold;
+  color: $text-primary;
+  @include text-overflow;
+  max-width: 65%;
+}
+
+.home-deck-card__meta {
+  display: flex;
+  align-items: center;
+  gap: $gap-sm;
+}
+
+.home-deck-card__count {
+  font-size: $font-size-sm;
+  color: $text-muted;
+}
+
+.home-deck-card__due {
+  background: rgba($accent, 0.12);
+  border-radius: $radius-full;
+  padding: 4rpx 16rpx;
+}
+
+.home-deck-card__due-text {
+  font-size: $font-size-xs;
+  color: $accent;
+  font-weight: $font-weight-semibold;
+}
+
+.home-deck-progress {
+  display: flex;
+  align-items: center;
+  gap: $gap-sm;
+}
+
+.home-deck-progress__bar {
+  flex: 1;
+  height: 8rpx;
+  background: $bg-surface;
+  border-radius: $radius-full;
+  overflow: hidden;
+}
+
+.home-deck-progress__fill {
+  height: 100%;
+  background: $status-know;
+  border-radius: $radius-full;
+  transition: width 0.3s ease;
+  min-width: 4rpx;
+}
+
+.home-deck-progress__label {
+  font-size: $font-size-xs;
+  color: $text-muted;
+  white-space: nowrap;
+}
+
+// ─── Empty State ───────────────────────────────────────────────────────────
+.home-empty {
+  @include flex-col;
+  align-items: center;
+  justify-content: center;
+  padding: $gap-xl $gap-lg;
+  gap: $gap-md;
+  flex: 1;
+}
+
+.home-empty__emoji {
+  font-size: 96rpx;
+}
+
+.home-empty__title {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  color: $text-primary;
+}
+
+.home-empty__desc {
+  font-size: $font-size-md;
+  color: $text-muted;
+  text-align: center;
+  line-height: $line-height-relaxed;
+  max-width: 480rpx;
+}
+
+.home-empty__btn {
+  @include flex-center;
+  background: $accent;
+  border-radius: $radius-btn;
+  height: 88rpx;
+  padding: 0 $gap-xl;
+  margin-top: $gap-sm;
+  box-shadow: $shadow-card;
+
+  &:active {
+    opacity: 0.85;
+  }
+}
+
+.home-empty__btn-text {
+  font-size: $font-size-base;
+  font-weight: $font-weight-semibold;
+  color: $text-inverse;
+}
+
+// ─── FAB ───────────────────────────────────────────────────────────────────
+.home-fab {
+  position: fixed;
+  right: 40rpx;
+  bottom: 160rpx;
+  width: 96rpx;
+  height: 96rpx;
+  background: $accent;
+  border-radius: $radius-full;
+  @include flex-center;
+  box-shadow: $shadow-lg;
+  z-index: 100;
+
+  &:active {
+    opacity: 0.85;
+  }
+}
+
+.home-fab__icon {
+  font-size: 56rpx;
+  color: $text-inverse;
+  line-height: 1;
+  margin-top: -4rpx;
+}

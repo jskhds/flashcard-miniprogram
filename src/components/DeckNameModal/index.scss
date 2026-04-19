@@ -1,0 +1,84 @@
+@import '../../styles/tokens.scss';
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(26, 22, 20, 0.4);
+  z-index: 1000;
+  display: flex;
+  align-items: flex-end;
+}
+
+.modal-sheet {
+  width: 100%;
+  background: $bg-base;
+  border-radius: $radius-card $radius-card 0 0;
+  padding: $gap-lg $page-padding;
+  padding-bottom: calc(#{$gap-lg} + env(safe-area-inset-bottom));
+  @include flex-col;
+  gap: $gap-md;
+}
+
+.modal-title {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-bold;
+  color: $text-primary;
+  text-align: center;
+  margin-bottom: $gap-sm;
+}
+
+.modal-input {
+  width: 100%;
+  display: block;
+  background: $bg-card;
+  border-radius: $radius-btn;
+  height: 88rpx;
+  line-height: 88rpx;
+  padding: 0 24rpx;
+  font-size: 32rpx;
+  color: $text-primary;
+  border: 2rpx solid $border-light;
+}
+
+.modal-input--error {
+  border-color: $status-unknown;
+}
+
+.modal-error {
+  font-size: $font-size-sm;
+  color: $status-unknown;
+  padding: 0 4rpx;
+}
+
+.modal-actions {
+  display: flex;
+  gap: $gap-sm;
+}
+
+.modal-btn {
+  flex: 1;
+  @include flex-center;
+  height: 88rpx;
+  border-radius: $radius-btn;
+  font-size: $font-size-base;
+  font-weight: $font-weight-semibold;
+
+  &:active {
+    opacity: 0.8;
+  }
+
+  &--cancel {
+    background: $bg-surface;
+    color: $text-secondary;
+  }
+
+  &--confirm {
+    background: $accent;
+    color: $text-inverse;
+
+    &.modal-btn--disabled {
+      background: $bg-surface-2;
+      color: $text-muted;
+    }
+  }
+}

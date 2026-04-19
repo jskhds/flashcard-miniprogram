@@ -1,0 +1,12 @@
+@import './tokens.scss';
+
+page {
+  background-color: $bg-base;
+  font-family: -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+  color: $text-primary;
+  box-sizing: border-box;
+}
+
+view, text, image, button, input, textarea, scroll-view {
+  box-sizing: border-box;
+}

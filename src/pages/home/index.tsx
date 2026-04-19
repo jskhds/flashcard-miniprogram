@@ -1,0 +1,77 @@
+import { useState } from 'react'
+import Taro from '@tarojs/taro'
+import { View } from '@tarojs/components'
+import { getDecks, setReviewSession, getStreak } from '@/utils/storage'
+import { isDue } from '@/utils/sm2'
+import { Deck } from '@/types'
+import { useDeckCRUD } from '@/hooks/useDeckCRUD'
+import TodayStats from './components/TodayStats'
+import DeckOverview from './components/DeckOverview'
+import DeckNameModal from '@/components/DeckNameModal'
+import './index.scss'
+
+export default function Home() {
+  const [decks, setDecks] = useState<Deck[]>([])
+  const [todayCount, setTodayCount] = useState(0)
+  const [streak, setStreak] = useState(0)
+
+  const {
+    showModal, editingDeck, modalName, nameError,
+    setModalName, setNameError,
+    openCreate, openEdit, closeModal, handleSave, handleDelete,
+  } = useDeckCRUD(loadData)
+
+  Taro.useDidShow(() => { loadData() })
+
+  function loadData() {
+    const allDecks = getDecks()
+    setDecks(allDecks)
+    const dueCount = allDecks.reduce((sum, d) => sum + d.cards.filter(c => isDue(c)).length, 0)
+    setTodayCount(dueCount)
+    setStreak(getStreak().current)
+  }
+
+  function handleStartReview() {
+    if (todayCount === 0) {
+      Taro.showToast({ title: '今日无到期卡片', icon: 'none' })
+      return
+    }
+    const allDueCards = decks.flatMap(d => d.cards.filter(c => isDue(c)))
+    const session = {
+      cards: allDueCards,
+      source: 'home',
+      deckIds: [...new Set(allDueCards.map(c => decks.find(d => d.cards.some(dc => dc.id === c.id))?.id ?? ''))]
+    }
+    setReviewSession(session)
+    Taro.navigateTo({ url: '/pages/review/index' })
+  }
+
+  return (
+    <View className='home-page'>
+      <TodayStats
+        todayCount={todayCount}
+        streak={streak}
+        deckCount={decks.length}
+        totalCards={decks.reduce((s, d) => s + d.cards.length, 0)}
+        onStartReview={handleStartReview}
+      />
+      <DeckOverview
+        decks={decks}
+        onEdit={openEdit}
+        onDelete={handleDelete}
+        onCreateDeck={openCreate}
+      />
+      {showModal && (
+        <DeckNameModal
+          title={editingDeck ? '编辑卡组' : '新建卡组'}
+          value={modalName}
+          error={nameError}
+          confirmText={editingDeck ? '保存' : '创建'}
+          onInput={(val) => { setModalName(val); setNameError('') }}
+          onConfirm={handleSave}
+          onClose={closeModal}
+        />
+      )}
+    </View>
+  )
+}
