@@ -1,16 +1,17 @@
 import { useState, useEffect } from 'react'
 import Taro from '@tarojs/taro'
 import { View, Text } from '@tarojs/components'
-import { getReviewSession, clearReviewSession, getDecks, saveDecks, addReviewRecord, getTodayStr, setSummaryResults } from '@/utils/storage'
-import { calculateNextReview } from '@/utils/sm2'
-import { Card, ReviewQuality, ReviewResult } from '@/types'
+import { getReviewSession, clearReviewSession, setSummaryResults } from '@/utils/storage'
+import { submitReview } from '@/api/review'
+import { ApiCard } from '@/types/api/card'
+import { ReviewQuality, ReviewResult } from '@/types'
 import ReviewProgress from './components/ReviewProgress'
 import ReviewCard from './components/ReviewCard'
 import RatingButtons from './components/RatingButtons'
 import './index.scss'
 
 export default function Review() {
-  const [cards, setCards] = useState<Card[]>([])
+  const [cards, setCards] = useState<ApiCard[]>([])
   const [deckId, setDeckId] = useState<string>('')
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isFlipped, setIsFlipped] = useState(false)
@@ -18,7 +19,7 @@ export default function Review() {
   const [results, setResults] = useState<ReviewResult[]>([])
 
   useEffect(() => {
-    const session = getReviewSession<{ cards: Card[], deckId: string }>()
+    const session = getReviewSession<{ cards: ApiCard[], deckId: string }>()
     if (!session || session.cards.length === 0) {
       Taro.showToast({ title: '没有卡片可以复习', icon: 'none' })
       setTimeout(() => Taro.navigateBack(), 800)
@@ -32,20 +33,11 @@ export default function Review() {
   const currentCard = cards[currentIndex]
   const progress = cards.length > 0 ? (currentIndex / cards.length) * 100 : 0
 
-  function handleRate(quality: ReviewQuality) {
+  const handleRate = async (quality: ReviewQuality) => {
     if (!currentCard || isSliding) return
 
-    const updatedCard = calculateNextReview(currentCard, quality)
-    const newResults = [...results, { cardId: currentCard.id, quality }]
+    const newResults: ReviewResult[] = [...results, { cardId: currentCard._id, quality }]
     setResults(newResults)
-
-    const allDecks = getDecks()
-    const deck = allDecks.find(d => d.cards.some(c => c.id === currentCard.id))
-    if (deck) {
-      const cardIdx = deck.cards.findIndex(c => c.id === currentCard.id)
-      if (cardIdx !== -1) deck.cards[cardIdx] = updatedCard
-      saveDecks(allDecks)
-    }
 
     if (currentIndex < cards.length - 1) {
       setIsSliding(true)
@@ -55,10 +47,10 @@ export default function Review() {
         setIsSliding(false)
       }, 280)
     } else {
-      addReviewRecord(getTodayStr(), newResults.length)
       setIsSliding(true)
-      setTimeout(() => {
-        setSummaryResults({ results: newResults, deckId, cards })
+      setTimeout(async () => {
+        const res = await submitReview(deckId, newResults)
+        setSummaryResults({ results: newResults, deckId, streak: res.streak })
         Taro.redirectTo({ url: '/pages/review-summary/index' })
       }, 300)
     }

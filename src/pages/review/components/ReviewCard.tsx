@@ -1,8 +1,8 @@
 import { View, Text, ScrollView } from '@tarojs/components'
-import { Card } from '@/types'
+import { ApiCard } from '@/types/api/card'
 
 interface ReviewCardProps {
-  card: Card
+  card: ApiCard
   isFlipped: boolean
   isSliding: boolean
   onFlip: () => void

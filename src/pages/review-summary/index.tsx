@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react'
 import Taro from '@tarojs/taro'
 import { View, Text } from '@tarojs/components'
-import { updateStreak, setReviewSession, getSummaryResults, clearSummaryResults, getDecks } from '@/utils/storage'
-import { Card, ReviewResult } from '@/types'
+import { setReviewSession, getSummaryResults, clearSummaryResults } from '@/utils/storage'
+import { getDueCards } from '@/api/review'
+import { ReviewResult } from '@/types'
 import SummaryHeader from './components/SummaryHeader'
 import SummaryBreakdown from './components/SummaryBreakdown'
 import SummaryActions from './components/SummaryActions'
@@ -11,7 +12,7 @@ import './index.scss'
 interface SummaryData {
   results: ReviewResult[]
   deckId: string
-  cards: Card[]
+  streak: { current: number; longest: number; lastDate: string }
 }
 
 export default function ReviewSummary() {
@@ -26,7 +27,9 @@ export default function ReviewSummary() {
   const [streak, setStreak] = useState(0)
 
   useEffect(() => {
-    setStreak(updateStreak().current)
+    if (data?.streak) {
+      setStreak(data.streak.current)
+    }
   }, [])
 
   if (!data) {
@@ -39,23 +42,23 @@ export default function ReviewSummary() {
   const unknown = data.results.filter(r => r.quality === 0).length
   const knowRate = total > 0 ? Math.round((know / total) * 100) : 0
 
-  function handleRetry() {
-    const retryCardIds = new Set(data!.results.filter(r => r.quality < 5).map(r => r.cardId))
+  const handleRetry = async () => {
+    const retryCardIds = new Set(data.results.filter(r => r.quality < 5).map(r => r.cardId))
     if (retryCardIds.size === 0) {
       Taro.showToast({ title: '全部掌握！无需再次复习', icon: 'success' })
       return
     }
-    // Read fresh cards from storage so SM-2 data reflects the latest review
-    const allDecks = getDecks()
-    const sourceCards = data!.deckId
-      ? (allDecks.find(d => d.id === data!.deckId)?.cards ?? [])
-      : allDecks.flatMap(d => d.cards)
-    const retryCards = sourceCards.filter(c => retryCardIds.has(c.id))
-    setReviewSession({ cards: retryCards, deckId: data!.deckId })
+    const { cards } = await getDueCards(data.deckId || undefined)
+    const retryCards = cards.filter(c => retryCardIds.has(c._id))
+    if (retryCards.length === 0) {
+      Taro.showToast({ title: '暂无待复习卡片', icon: 'none' })
+      return
+    }
+    setReviewSession({ cards: retryCards, deckId: data.deckId })
     Taro.redirectTo({ url: '/pages/review/index' })
   }
 
-  function handleBack() {
+  const handleBack = () => {
     Taro.navigateBack()
   }
 
