@@ -156,6 +156,34 @@
   padding-bottom: $gap-xl;
 }
 
+.home-bottom-row {
+  display: flex;
+  gap: $gap-sm;
+
+  .home-review-btn {
+    flex: 1;
+  }
+}
+
+.home-extra-btn {
+  flex-shrink: 0;
+  height: 96rpx;
+  padding: 0 $gap-lg;
+  background: $bg-surface;
+  border-radius: $radius-btn;
+  @include flex-center;
+
+  &:active {
+    opacity: 0.75;
+  }
+}
+
+.home-extra-btn__text {
+  font-size: $font-size-base;
+  font-weight: $font-weight-semibold;
+  color: $text-secondary;
+}
+
 .home-review-btn {
   @include flex-center;
   background: $accent;
