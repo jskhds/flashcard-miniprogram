@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { View, Text, ScrollView } from '@tarojs/components'
-import { Card, DisplayStatus } from '@/types'
+import { DisplayStatus } from '@/types'
+import { ApiCard } from '@/types/api/card'
 import { getDisplayStatus, getStatusColor } from '@/utils/sm2'
 import { useSwipeGesture } from '@/hooks/useSwipeGesture'
 
@@ -12,10 +13,10 @@ const STATUS_BG: Record<DisplayStatus, string> = {
 }
 
 interface CardListProps {
-  cards: Card[]
-  onCardClick: (card: Card) => void
-  onEdit: (card: Card) => void
-  onDelete: (card: Card) => void
+  cards: ApiCard[]
+  onCardClick: (card: ApiCard) => void
+  onEdit: (card: ApiCard) => void
+  onDelete: (card: ApiCard) => void
 }
 
 export default function CardList({ cards, onCardClick, onEdit, onDelete }: CardListProps) {
@@ -37,14 +38,14 @@ export default function CardList({ cards, onCardClick, onEdit, onDelete }: CardL
     <ScrollView scrollY={!scrollLocked} showScrollbar={false} className='cards-list'>
       {cards.map(card => {
         const status = getDisplayStatus(card)
-        const isOpen = swipeOpen === card.id
+        const isOpen = swipeOpen === card._id
         return (
           <View
-            key={card.id}
+            key={card._id}
             className='card-item-wrapper'
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}
-            onTouchEnd={(e) => handleTouchEnd(e, card.id)}
+            onTouchEnd={(e) => handleTouchEnd(e, card._id)}
           >
             <View
               className={`card-item ${isOpen ? 'card-item--swiped' : ''}`}

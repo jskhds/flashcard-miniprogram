@@ -303,6 +303,7 @@
   padding-bottom: calc(#{$gap-sm} + env(safe-area-inset-bottom));
   background: $bg-base;
   display: flex;
+  gap: $gap-sm;
   flex-shrink: 0;
 
   &--entering {
