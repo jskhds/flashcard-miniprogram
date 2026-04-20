@@ -1,21 +1,34 @@
 import { useState } from 'react'
 import Taro from '@tarojs/taro'
 import { View, Text, Input, ScrollView } from '@tarojs/components'
-import { getDecks, saveDecks } from '@/utils/storage'
-import { Deck } from '@/types'
+import { getFavoritedIds, setFavoritedIds } from '@/utils/storage'
+import { getDecks as apiGetDecks } from '@/api/decks'
+import { ApiDeck } from '@/types/api/deck'
+import { loginReady } from '@/utils/loginReady'
 import { useDeckCRUD } from '@/hooks/useDeckCRUD'
 import DeckList from './components/DeckList'
 import DeckNameModal from '@/components/DeckNameModal'
 import './index.scss'
 
+type DeckWithFav = ApiDeck & { favorited: boolean }
+
 export default function Decks() {
-  const [decks, setDecks] = useState<Deck[]>([])
+  const [decks, setDecks] = useState<DeckWithFav[]>([])
   const [search, setSearch] = useState('')
   const [scrollLocked, setScrollLocked] = useState(false)
 
-  function refresh() { setDecks(getDecks()) }
+  const refresh = async () => {
+    await loginReady
+    const apiDecks = await apiGetDecks()
+    const favIds = new Set(getFavoritedIds())
+    setDecks(apiDecks.map(d => ({ ...d, favorited: favIds.has(d._id) })))
+  }
 
-  function handleFavorite(deck: Deck) {
+  function handleFavorite(deck: DeckWithFav) {
+    if (!deck.favorited && deck.stats.total === 0) {
+      Taro.showToast({ title: '请先添加卡片再加入学习计划', icon: 'none', duration: 2000 })
+      return
+    }
     if (deck.favorited) {
       Taro.showModal({
         title: '移出学习计划',
@@ -25,21 +38,17 @@ export default function Decks() {
         confirmColor: '#FF3B30',
         success: (res) => {
           if (res.confirm) {
-            const allDecks = getDecks()
-            const target = allDecks.find(d => d.id === deck.id)
-            if (target) { target.favorited = false; saveDecks(allDecks); refresh() }
+            const ids = getFavoritedIds().filter(id => id !== deck._id)
+            setFavoritedIds(ids)
+            setDecks(prev => prev.map(d => d._id === deck._id ? { ...d, favorited: false } : d))
           }
         }
       })
     } else {
-      const allDecks = getDecks()
-      const target = allDecks.find(d => d.id === deck.id)
-      if (target) {
-        target.favorited = true
-        saveDecks(allDecks)
-        refresh()
-        Taro.showToast({ title: '已加入学习计划', icon: 'none', duration: 1500 })
-      }
+      const ids = [...getFavoritedIds().filter(id => id !== deck._id), deck._id]
+      setFavoritedIds(ids)
+      setDecks(prev => prev.map(d => d._id === deck._id ? { ...d, favorited: true } : d))
+      Taro.showToast({ title: '已加入学习计划', icon: 'none', duration: 1500 })
     }
   }
 

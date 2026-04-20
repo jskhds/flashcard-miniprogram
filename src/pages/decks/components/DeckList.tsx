@@ -1,14 +1,16 @@
 import { View, Text } from '@tarojs/components'
-import { Deck } from '@/types'
+import { ApiDeck } from '@/types/api/deck'
 import { useSwipeGesture } from '@/hooks/useSwipeGesture'
 import DeckCard from './DeckCard'
 
+type DeckWithFav = ApiDeck & { favorited: boolean }
+
 interface DeckListProps {
-  decks: Deck[]
+  decks: DeckWithFav[]
   search?: string
-  onEdit: (deck: Deck) => void
-  onDelete: (deck: Deck) => void
-  onFavorite: (deck: Deck) => void
+  onEdit: (deck: DeckWithFav) => void
+  onDelete: (deck: DeckWithFav) => void
+  onFavorite: (deck: DeckWithFav) => void
   onLockScroll?: () => void
   onUnlockScroll?: () => void
 }
@@ -34,12 +36,12 @@ export default function DeckList({ decks, search, onEdit, onDelete, onFavorite, 
     <View className='decks-list'>
       {displayed.map(deck => (
         <DeckCard
-          key={deck.id}
+          key={deck._id}
           deck={deck}
-          isOpen={swipeOpen === deck.id}
+          isOpen={swipeOpen === deck._id}
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
-          onTouchEnd={(e) => handleTouchEnd(e, deck.id)}
+          onTouchEnd={(e) => handleTouchEnd(e, deck._id)}
           onClose={() => setSwipeOpen(null)}
           onEdit={onEdit}
           onDelete={onDelete}
