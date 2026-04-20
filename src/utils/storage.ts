@@ -164,21 +164,12 @@ export function clearSummaryResults(): void {
 
 const FAV_KEY = 'flashcard_favorited_ids'
 
-export function getFavoritedIds(): string[] {
-  try {
-    const data = Taro.getStorageSync(FAV_KEY)
-    return data ? JSON.parse(data) : []
-  } catch {
-    return []
-  }
+export const getFavoritedIds = (): string[] => {
+  return wx.getStorageSync(FAV_KEY) || []
 }
 
-export function setFavoritedIds(ids: string[]): void {
-  try {
-    Taro.setStorageSync(FAV_KEY, JSON.stringify(ids))
-  } catch (e) {
-    console.error('setFavoritedIds error', e)
-  }
+export const setFavoritedIds = (ids: string[]): void => {
+  wx.setStorageSync(FAV_KEY, ids)
 }
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
