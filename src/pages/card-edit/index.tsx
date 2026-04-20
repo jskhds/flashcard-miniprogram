@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import Taro, { useRouter } from '@tarojs/taro'
-import { getDeckById, saveDecks, getDecks } from '@/utils/storage'
-import { createCard } from '@/utils/sm2'
+import { getCards, createCard, updateCard, deleteCard } from '@/api/cards'
+import { loginReady } from '@/utils/loginReady'
 import CardEditForm from './components/CardEditForm'
 import './index.scss'
 
@@ -16,74 +16,55 @@ export default function CardEdit() {
   const [frontError, setFrontError] = useState('')
 
   useEffect(() => {
-    if (isEdit) {
-      const deck = getDeckById(deckId)
-      const card = deck?.cards.find(c => c.id === cardId)
-      if (card) { setFront(card.front); setBack(card.back) }
-    }
     Taro.setNavigationBarTitle({ title: isEdit ? '编辑卡片' : '新建卡片' })
+    if (isEdit) {
+      loginReady.then(async () => {
+        const cards = await getCards(deckId)
+        const card = cards.find(c => c._id === cardId)
+        if (card) { setFront(card.front); setBack(card.back) }
+      })
+    }
   }, [])
 
   const isValid = front.trim().length > 0 && back.trim().length > 0
 
-  function handleSaveAndContinue() {
+  const handleSaveAndContinue = async () => {
     if (!isValid) return
-    const allDecks = getDecks()
-    const deck = allDecks.find(d => d.id === deckId)
-    if (!deck) { Taro.showToast({ title: '卡组不存在', icon: 'none' }); return }
-
-    const trimmedFront = front.trim()
-    if (deck.cards.some(c => c.front === trimmedFront)) {
-      setFrontError('该卡组内已有相同正面内容的卡片')
-      return
+    try {
+      await createCard(deckId, front.trim(), back.trim())
+      Taro.showToast({ title: '已创建，继续添加', icon: 'success' })
+      setFront('')
+      setBack('')
+      setFrontError('')
+    } catch (e: any) {
+      setFrontError(e.message ?? '创建失败')
     }
-
-    deck.cards.push(createCard(trimmedFront, back.trim()))
-    saveDecks(allDecks)
-    Taro.showToast({ title: '已创建，继续添加', icon: 'success' })
-    setFront('')
-    setBack('')
-    setFrontError('')
   }
 
-  function handleSave() {
+  const handleSave = async () => {
     if (!isValid) return
-    const allDecks = getDecks()
-    const deck = allDecks.find(d => d.id === deckId)
-    if (!deck) { Taro.showToast({ title: '卡组不存在', icon: 'none' }); return }
-
-    const trimmedFront = front.trim()
-    if (deck.cards.some(c => c.front === trimmedFront && c.id !== cardId)) {
-      setFrontError('该卡组内已有相同正面内容的卡片')
-      return
+    try {
+      if (isEdit) {
+        await updateCard(deckId, cardId, front.trim(), back.trim())
+      } else {
+        await createCard(deckId, front.trim(), back.trim())
+      }
+      Taro.showToast({ title: isEdit ? '已保存' : '卡片已创建', icon: 'success' })
+      setTimeout(() => Taro.navigateBack(), 800)
+    } catch (e: any) {
+      setFrontError(e.message ?? '保存失败')
     }
-
-    if (isEdit) {
-      const card = deck.cards.find(c => c.id === cardId)
-      if (card) { card.front = trimmedFront; card.back = back.trim() }
-    } else {
-      deck.cards.push(createCard(trimmedFront, back.trim()))
-    }
-
-    saveDecks(allDecks)
-    Taro.showToast({ title: isEdit ? '已保存' : '卡片已创建', icon: 'success' })
-    setTimeout(() => Taro.navigateBack(), 800)
   }
 
-  function handleDelete() {
+  const handleDelete = () => {
     Taro.showModal({
       title: '删除卡片',
       content: '确认删除这张卡片？',
       confirmText: '删除',
       confirmColor: '#FF3B30',
-      success: (res) => {
+      success: async (res) => {
         if (res.confirm) {
-          const allDecks = getDecks()
-          const deck = allDecks.find(d => d.id === deckId)
-          if (deck) {
-            deck.cards = deck.cards.filter(c => c.id !== cardId)
-            saveDecks(allDecks)
-          }
+          await deleteCard(deckId, cardId)
           Taro.showToast({ title: '已删除', icon: 'success' })
           setTimeout(() => Taro.navigateBack(), 800)
         }
