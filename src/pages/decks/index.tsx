@@ -53,8 +53,8 @@ export default function Decks() {
   }
 
   const {
-    showModal, editingDeck, modalName, nameError,
-    setModalName, setNameError,
+    showModal, editingDeck, modalName, nameError, isJa,
+    setModalName, setNameError, setIsJa,
     openCreate, openEdit, closeModal, handleSave, handleDelete,
   } = useDeckCRUD(refresh)
 
@@ -70,7 +70,15 @@ export default function Decks() {
     <View className='decks-page'>
       <View className='decks-header'>
         <Text className='decks-title'>我的卡组</Text>
-        <View className='decks-add-btn' onClick={openCreate}>
+        <View className='decks-add-btn' onClick={() => {
+          Taro.showActionSheet({
+            itemList: ['新建卡组', '从模板导入'],
+            success: (res) => {
+              if (res.tapIndex === 0) openCreate()
+              else Taro.navigateTo({ url: '/pages/deck-template/index' })
+            }
+          })
+        }}>
           <Text className='decks-add-btn__icon'>+</Text>
         </View>
       </View>
@@ -93,9 +101,11 @@ export default function Decks() {
           value={modalName}
           error={nameError}
           confirmText={editingDeck ? '保存' : '创建'}
+          isJa={isJa}
           onInput={(val) => { setModalName(val); setNameError('') }}
           onConfirm={handleSave}
           onClose={closeModal}
+          onToggleJa={editingDeck ? undefined : () => setIsJa(v => !v)}
         />
       )}
     </View>

@@ -1,0 +1,91 @@
+@import '../../styles/tokens.scss';
+
+.deck-template-page {
+  min-height: 100vh;
+  background: $bg-base;
+}
+
+.deck-template-content {
+  padding: $page-padding;
+  @include flex-col;
+  gap: $gap-lg;
+}
+
+.deck-template-card {
+  @include card-base;
+  @include flex-col;
+  gap: $gap-md;
+  box-shadow: $shadow-md;
+}
+
+.deck-template-card__header {
+  @include flex-col;
+  gap: $gap-xs;
+}
+
+.deck-template-card__name {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  color: $text-primary;
+}
+
+.deck-template-card__desc {
+  font-size: $font-size-sm;
+  color: $text-muted;
+}
+
+.deck-template-card__grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $gap-xs;
+}
+
+.deck-template-card__cell {
+  width: 96rpx;
+  height: 96rpx;
+  background: $bg-surface;
+  border-radius: $radius-sm;
+  @include flex-col;
+  align-items: center;
+  justify-content: center;
+  gap: 4rpx;
+}
+
+.deck-template-card__kana {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-semibold;
+  color: $text-primary;
+  line-height: 1;
+}
+
+.deck-template-card__romaji {
+  font-size: $font-size-xs;
+  color: $text-muted;
+}
+
+.deck-template-card__cell--more {
+  background: $bg-surface-2;
+}
+
+.deck-template-card__more {
+  font-size: $font-size-sm;
+  color: $text-muted;
+  font-weight: $font-weight-medium;
+}
+
+.deck-template-card__btn {
+  @include btn-primary;
+  height: 88rpx;
+  @include flex-center;
+  margin-top: $gap-xs;
+
+  &--loading {
+    opacity: 0.6;
+  }
+}
+
+.deck-template-card__btn-text {
+  font-size: $font-size-base;
+  font-weight: $font-weight-semibold;
+  color: $text-inverse;
+}

@@ -3,7 +3,7 @@ import Taro, { useRouter } from '@tarojs/taro'
 import { View, Text, Input } from '@tarojs/components'
 import { getCards, deleteCard } from '@/api/cards'
 import { getDueCards } from '@/api/review'
-import { setReviewSession } from '@/utils/storage'
+import { setReviewSession, getDeckType } from '@/utils/storage'
 import { loginReady } from '@/utils/loginReady'
 import { getDisplayStatus } from '@/utils/sm2'
 import { DisplayStatus } from '@/types'
@@ -97,11 +97,13 @@ export default function Cards() {
   }
 
   const handleCardEdit = (card: ApiCard) => {
-    Taro.navigateTo({ url: `/pages/card-edit/index?deckId=${deckId}&cardId=${card._id}` })
+    const deckType = getDeckType(deckId)
+    Taro.navigateTo({ url: `/pages/card-edit/index?deckId=${deckId}&cardId=${card._id}&deckType=${deckType}` })
   }
 
   const handleAddCard = () => {
-    Taro.navigateTo({ url: `/pages/card-edit/index?deckId=${deckId}` })
+    const deckType = getDeckType(deckId)
+    Taro.navigateTo({ url: `/pages/card-edit/index?deckId=${deckId}&deckType=${deckType}` })
   }
 
   return (
