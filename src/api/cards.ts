@@ -1,37 +1,33 @@
 import { request } from './request'
 import { ApiCard, ApiCardStatus, ApiCardUpdated, ApiCardDeleted } from '@/types/api/card'
 
-/**
- * 获取卡组内所有卡片，可按 status 过滤。
- * GET /api/decks/:deckId/cards[?status=new|learning|review]
- */
+interface CardFields {
+  front: string
+  back: string
+  reading?: string
+  romaji?: string
+  pitch?: number
+  meaning?: string
+  example?: string
+}
+
 export const getCards = (deckId: string, status?: ApiCardStatus): Promise<ApiCard[]> => {
   const query = status ? `?status=${status}` : ''
   return request<ApiCard[]>('GET', `/decks/${deckId}/cards${query}`)
 }
 
-/**
- * 新建卡片。
- * POST /api/decks/:deckId/cards
- */
-export const createCard = (deckId: string, front: string, back: string): Promise<ApiCard> =>
-  request<ApiCard>('POST', `/decks/${deckId}/cards`, { front, back })
+export const createCard = (deckId: string, fields: CardFields): Promise<ApiCard> =>
+  request<ApiCard>('POST', `/decks/${deckId}/cards`, fields)
 
-/**
- * 修改卡片正背面内容（不改 SM-2 数据）。
- * PUT /api/decks/:deckId/cards/:cardId
- */
 export const updateCard = (
   deckId: string,
   cardId: string,
-  front: string,
-  back: string,
+  fields: CardFields,
 ): Promise<ApiCardUpdated> =>
-  request<ApiCardUpdated>('PUT', `/decks/${deckId}/cards/${cardId}`, { front, back })
+  request<ApiCardUpdated>('PUT', `/decks/${deckId}/cards/${cardId}`, fields)
 
-/**
- * 删除卡片。
- * DELETE /api/decks/:deckId/cards/:cardId
- */
 export const deleteCard = (deckId: string, cardId: string): Promise<ApiCardDeleted> =>
   request<ApiCardDeleted>('DELETE', `/decks/${deckId}/cards/${cardId}`)
+
+export const batchCreateCards = (deckId: string, cards: CardFields[]): Promise<{ created: number }> =>
+  request<{ created: number }>('POST', `/decks/${deckId}/cards/batch`, { cards })
