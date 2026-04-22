@@ -160,6 +160,23 @@ export function clearSummaryResults(): void {
   } catch {}
 }
 
+// ─── Deck Type（本地持久化，不走后端）────────────────────────────────────────
+
+const DECK_TYPES_KEY = 'flashcard_deck_types'
+
+export type DeckType = 'ja' | 'general'
+
+export const getDeckType = (deckId: string): DeckType => {
+  const map: Record<string, DeckType> = wx.getStorageSync(DECK_TYPES_KEY) || {}
+  return map[deckId] ?? 'general'
+}
+
+export const setDeckType = (deckId: string, type: DeckType): void => {
+  const map: Record<string, DeckType> = wx.getStorageSync(DECK_TYPES_KEY) || {}
+  map[deckId] = type
+  wx.setStorageSync(DECK_TYPES_KEY, map)
+}
+
 // ─── Favorited Deck IDs（本地持久化，不走后端）────────────────────────────────
 
 const FAV_KEY = 'flashcard_favorited_ids'

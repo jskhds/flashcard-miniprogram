@@ -7,10 +7,15 @@ export interface ApiCard {
   ease: number
   interval: number
   repetitions: number
-  nextReview: string     // ISO 日期字符串
+  nextReview: string
   status: ApiCardStatus
-  createdAt: string      // ISO 日期字符串
-  deckId?: string        // getDueCards 响应中包含
+  createdAt: string
+  deckId?: string
+  reading?: string
+  romaji?: string
+  pitch?: number
+  meaning?: string
+  example?: string
 }
 
 export interface ApiCardUpdated {
