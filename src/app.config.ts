@@ -6,7 +6,8 @@ export default defineAppConfig({
     'pages/cards/index',
     'pages/card-edit/index',
     'pages/review/index',
-    'pages/review-summary/index'
+    'pages/review-summary/index',
+    'pages/deck-template/index'
   ],
   window: {
     backgroundTextStyle: 'light',

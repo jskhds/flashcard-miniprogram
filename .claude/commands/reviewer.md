@@ -2,7 +2,7 @@
 
 职责：
 
-- 检查代码是否符合 code-rules.md 规范
+- 检查代码是否符合 ./rules/code-rules.md 规范
 - 检查组件拆分是否合理
 - 找出潜在的性能问题（不必要的重渲染、缺少 useCallback 等）
 - 检查 API 调用是否都有错误处理

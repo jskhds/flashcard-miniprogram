@@ -2,7 +2,7 @@ import Taro from '@tarojs/taro'
 import { getToken } from './token'
 
 // 联调时指向本地后端，上线前改为正式域名
-export const BASE_URL = 'http://localhost:3000/api'
+export const BASE_URL = 'http://192.168.0.105:3000/api'
 
 interface ApiResponse<T> {
   code: number

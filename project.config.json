@@ -4,11 +4,11 @@
   "appid": "wxee0789ea40ea669b",
   "description": "闪卡学习小程序",
   "setting": {
-    "es6": false,
+    "es6": true,
     "postcss": false,
     "minified": false,
     "urlCheck": false,
-    "enhance": false,
+    "enhance": true,
     "useCompilerPlugins": false,
     "coverView": true,
     "compileWorklet": false,
