@@ -1,4 +1,4 @@
-@import '../../styles/tokens.scss';
+@import "../../styles/tokens.scss";
 
 .card-edit-page {
   @include page-container;
@@ -22,7 +22,7 @@
 }
 
 .card-edit-field__box {
-  background: #FFFFFF;
+  background: #ffffff;
   border-radius: 36rpx;
   padding: $gap-md $gap-lg;
   box-shadow: 0 4rpx 24rpx rgba(0, 0, 0, 0.05);
@@ -49,12 +49,193 @@
   resize: none;
 
   &--front {
-    min-height: 260rpx;
+    height: 120rpx;
   }
 
   &--back {
     min-height: 520rpx;
   }
+}
+
+// ─── Field label row ───────────────────────────────────────────────────────
+.card-edit-field__label-row {
+  @include flex-between;
+  align-items: center;
+}
+
+// ─── Lookup Button ─────────────────────────────────────────────────────────
+.card-edit-lookup-btn {
+  height: 48rpx;
+  padding: 0 $gap-md;
+  background: $accent;
+  border-radius: $radius-full;
+  @include flex-center;
+  transition: opacity $transition-fast;
+
+  &:active {
+    opacity: 0.85;
+  }
+
+  &--loading {
+    opacity: 0.6;
+  }
+}
+
+.card-edit-lookup-btn__text {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: $text-inverse;
+}
+
+// ─── Field badge（选填）──────────────────────────────────────────────────────
+.card-edit-field__badge {
+  font-size: $font-size-xs;
+  color: $text-muted;
+  background: $bg-surface;
+  border-radius: $radius-xs;
+  padding: 2rpx 12rpx;
+}
+
+// ─── Lookup Card ───────────────────────────────────────────────────────────
+.card-edit-lookup-card {
+  background: $bg-card;
+  border-radius: $radius-btn;
+  padding: $gap-md $gap-lg;
+  @include flex-col;
+  gap: $gap-sm;
+  border: 2rpx solid #a8d5c8;
+}
+
+.card-edit-lookup-card__header {
+  @include flex-between;
+  align-items: center;
+}
+
+.card-edit-lookup-card__title {
+  font-size: $font-size-xs;
+  font-weight: $font-weight-medium;
+  color: $text-muted;
+  letter-spacing: 0.04em;
+}
+
+.card-edit-lookup-card__source {
+  background: $bg-surface;
+  border-radius: $radius-xs;
+  padding: 2rpx 12rpx;
+}
+
+.card-edit-lookup-card__source-text {
+  font-size: $font-size-xs;
+  color: $text-muted;
+}
+
+.card-edit-lookup-card__main {
+  display: flex;
+  align-items: baseline;
+  gap: $gap-sm;
+}
+
+.card-edit-lookup-card__word {
+  font-size: $font-size-xl;
+  font-weight: $font-weight-semibold;
+  color: $text-primary;
+}
+
+.card-edit-lookup-card__read {
+  font-size: $font-size-base;
+  color: $text-secondary;
+}
+
+.card-edit-lookup-card__meaning {
+  font-size: $font-size-sm;
+  color: $text-secondary;
+  line-height: $line-height-relaxed;
+}
+
+.card-edit-lookup-card__actions {
+  display: flex;
+  gap: $gap-sm;
+}
+
+.card-edit-lookup-card__btn {
+  height: 56rpx;
+  padding: 0 $gap-lg;
+  border-radius: $radius-full;
+  @include flex-center;
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+
+  &--import {
+    background: rgba($status-know, 0.15);
+    color: darken(#34c759, 15%);
+  }
+
+  &--dismiss {
+    background: $bg-surface;
+    color: $text-muted;
+  }
+}
+
+// ─── Reading Box（input + TTS）─────────────────────────────────────────────
+.card-edit-reading-box {
+  background: #ffffff;
+  border-radius: $radius-btn;
+  padding: 0 $gap-md 0 $gap-lg;
+  height: 88rpx;
+  display: flex;
+  align-items: center;
+  gap: $gap-sm;
+  box-shadow: 0 4rpx 24rpx rgba(0, 0, 0, 0.05);
+}
+
+.card-edit-reading-input {
+  flex: 1;
+  font-size: $font-size-base;
+  color: $text-primary;
+  height: 100%;
+}
+
+.card-edit-tts-btn {
+  width: 56rpx;
+  height: 56rpx;
+  border-radius: $radius-full;
+  background: $accent;
+  @include flex-center;
+  flex-shrink: 0;
+  transition: opacity $transition-fast;
+
+  &:active {
+    opacity: 0.8;
+  }
+
+  &--disabled {
+    background: $bg-surface-2;
+  }
+
+  &--loading {
+    opacity: 0.6;
+  }
+}
+
+.card-edit-tts-icon {
+  font-size: $font-size-sm;
+  color: $text-inverse;
+  font-weight: $font-weight-bold;
+}
+
+// ─── Single-line field box ──────────────────────────────────────────────────
+.card-edit-field__box--single {
+  padding: 0 $gap-lg;
+  height: 88rpx;
+  @include flex-center;
+  align-items: center;
+}
+
+.card-edit-single-input {
+  width: 100%;
+  font-size: $font-size-base;
+  color: $text-primary;
+  height: 100%;
 }
 
 // ─── Delete Button ─────────────────────────────────────────────────────────
