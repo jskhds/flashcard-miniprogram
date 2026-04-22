@@ -9,17 +9,14 @@ module.exports = {
   settings: {
     react: { version: 'detect' },
   },
-  extends: [
-    'taro/react',
-    'plugin:@typescript-eslint/recommended',
-    'prettier',
-  ],
+  extends: ['taro/react', 'plugin:@typescript-eslint/recommended', 'prettier'],
   plugins: ['@typescript-eslint'],
   rules: {
-    '@typescript-eslint/no-explicit-any': 'off',
+    '@typescript-eslint/no-explicit-any': 'on',
     '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
-    'react/react-in-jsx-scope': 'off',
-    'react/prop-types': 'off',
-    'import/no-commonjs': 'off',
+    'react/react-in-jsx-scope': 'on',
+    'react/prop-types': 'on',
+    'import/no-commonjs': 'on',
+    'max-params': ['error', 5],
   },
 }

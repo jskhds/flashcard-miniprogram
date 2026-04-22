@@ -7,6 +7,7 @@
 - 使用 async/await，不用 callback
 - 变量命名用 camelCase，组件名用 PascalCase，常量用 UPPER_SNAKE_CASE
 - 文件名用 camelCase（组件文件用 PascalCase）
+- 避免超大函数，函数入参控制在五个以内
 
 ## 文件结构规范
 
