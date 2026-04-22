@@ -2,17 +2,20 @@ import { useState } from 'react'
 import Taro from '@tarojs/taro'
 import { createDeck, updateDeck, deleteDeck } from '@/api/decks'
 import { ApiDeck } from '@/types/api/deck'
+import { setDeckType, DeckType } from '@/utils/storage'
 
 export function useDeckCRUD(onSuccess: () => void) {
   const [showModal, setShowModal] = useState(false)
   const [editingDeck, setEditingDeck] = useState<ApiDeck | null>(null)
   const [modalName, setModalName] = useState('')
   const [nameError, setNameError] = useState('')
+  const [isJa, setIsJa] = useState(false)
 
   const openCreate = () => {
     setEditingDeck(null)
     setModalName('')
     setNameError('')
+    setIsJa(false)
     setShowModal(true)
   }
 
@@ -28,6 +31,7 @@ export function useDeckCRUD(onSuccess: () => void) {
     setEditingDeck(null)
     setModalName('')
     setNameError('')
+    setIsJa(false)
   }
 
   const handleSave = async () => {
@@ -39,13 +43,14 @@ export function useDeckCRUD(onSuccess: () => void) {
         await updateDeck(editingDeck._id, name)
         Taro.showToast({ title: '已更新', icon: 'success' })
       } else {
-        await createDeck(name)
+        const deck = await createDeck(name)
+        const type: DeckType = isJa ? 'ja' : 'general'
+        setDeckType(deck._id, type)
         Taro.showToast({ title: '创建成功', icon: 'success' })
       }
       closeModal()
       onSuccess()
     } catch (e: any) {
-      // 后端返回的错误信息（如"已存在同名卡组"）直接显示在输入框下
       setNameError(e.message ?? '操作失败')
     }
   }
@@ -74,8 +79,10 @@ export function useDeckCRUD(onSuccess: () => void) {
     editingDeck,
     modalName,
     nameError,
+    isJa,
     setModalName,
     setNameError,
+    setIsJa,
     openCreate,
     openEdit,
     closeModal,

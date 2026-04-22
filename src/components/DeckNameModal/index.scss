@@ -50,6 +50,31 @@
   padding: 0 4rpx;
 }
 
+.modal-toggle-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $gap-sm $gap-md;
+  background: $bg-card;
+  border-radius: $radius-btn;
+}
+
+.modal-toggle-label {
+  @include flex-col;
+  gap: 4rpx;
+}
+
+.modal-toggle-title {
+  font-size: $font-size-base;
+  font-weight: $font-weight-medium;
+  color: $text-primary;
+}
+
+.modal-toggle-desc {
+  font-size: $font-size-sm;
+  color: $text-muted;
+}
+
 .modal-actions {
   display: flex;
   gap: $gap-sm;
