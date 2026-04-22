@@ -1,4 +1,4 @@
-@import '../../styles/tokens.scss';
+@import "../../styles/tokens.scss";
 
 .review-page {
   min-height: 100vh;
@@ -120,26 +120,20 @@
 
 .review-card__back-question {
   background: $bg-surface;
-  @include flex-col;
+  display: flex;
+  flex-direction: row;
   align-items: center;
   padding: $gap-md $gap-lg;
-  gap: $gap-xs;
+  gap: $gap-sm;
   border-radius: $radius-card $radius-card 0 0;
   border-bottom: 2rpx solid $border-light;
-  max-height: 240rpx;
-  overflow: hidden;
   flex-shrink: 0;
-}
-
-.review-card__back-label-row {
-  display: flex;
-  align-items: center;
-  gap: 8rpx;
+  overflow: hidden;
 }
 
 .review-card__back-label-bar {
   width: 4rpx;
-  height: 24rpx;
+  height: 28rpx;
   border-radius: 2rpx;
   background: $text-muted;
   flex-shrink: 0;
@@ -150,14 +144,15 @@
   font-weight: $font-weight-bold;
   color: $text-muted;
   letter-spacing: 0.1em;
+  flex-shrink: 0;
 }
 
 .review-card__back-question-text {
   font-size: $font-size-lg;
   color: $text-primary;
-  font-weight: $font-weight-medium;
-  text-align: center;
-  line-height: $line-height-base;
+  font-weight: $font-weight-semibold;
+  line-height: 1;
+  flex: 1;
 }
 
 .review-card__back-answer {
@@ -225,8 +220,100 @@
 
 .review-card__front .review-card__deco,
 .review-card__back-answer .review-card__deco {
-  background: #F4845F;
+  background: #f4845f;
   opacity: 0.35;
+}
+
+// ─── Answer Card（日语模式）────────────────────────────────────────────────
+.review-card__answer-card {
+  flex: 1;
+  height: 0;
+  background: #ffffff;
+  border-radius: 0 0 $radius-card $radius-card;
+  padding: $gap-md $gap-lg;
+  @include flex-col;
+  gap: $gap-sm;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.review-card__answer-text {
+  font-size: $font-size-2xl;
+  font-weight: $font-weight-bold;
+  color: $text-primary;
+  line-height: $line-height-tight;
+  display: block;
+  word-break: break-word;
+}
+
+.review-card__reading-row {
+  display: flex;
+  align-items: center;
+  gap: $gap-sm;
+  margin-top: $gap-sm;
+}
+
+.review-card__answer-actions {
+  display: flex;
+  align-items: center;
+  gap: $gap-xs;
+  flex-shrink: 0;
+}
+
+.review-card__divider {
+  height: 2rpx;
+  background: $border-light;
+  flex-shrink: 0;
+}
+
+.review-card__meaning-text {
+  font-size: $font-size-sm;
+  color: $text-secondary;
+  line-height: $line-height-relaxed;
+}
+
+.review-card__reading {
+  font-size: $font-size-lg;
+  font-weight: $font-weight-medium;
+  color: $text-muted;
+}
+
+.review-card__pitch-badge {
+  background: $accent-light;
+  border-radius: $radius-full;
+  padding: 0 12rpx;
+  height: 36rpx;
+  @include flex-center;
+}
+
+.review-card__pitch-text {
+  font-size: $font-size-sm;
+  color: $accent-dark;
+  font-weight: $font-weight-medium;
+}
+
+.review-card__tts-btn {
+  width: 36rpx;
+  height: 36rpx;
+  background: $accent;
+  border-radius: $radius-full;
+  @include flex-center;
+  flex-shrink: 0;
+  transition: opacity $transition-fast;
+
+  &:active {
+    opacity: 0.7;
+  }
+
+  &--loading {
+    opacity: 0.5;
+  }
+}
+
+.review-card__tts-icon {
+  font-size: $font-size-xs;
+  line-height: 1;
+  color: $text-inverse;
 }
 
 // ─── Rating Buttons ────────────────────────────────────────────────────────
@@ -266,24 +353,39 @@
     background: rgba($status-unknown, 0.12);
     border: 2rpx solid rgba($status-unknown, 0.3);
 
-    .review-rate-btn__icon { color: $status-unknown; }
-    .review-rate-btn__label { color: $status-unknown; }
+    .review-rate-btn__icon {
+      color: $status-unknown;
+    }
+
+    .review-rate-btn__label {
+      color: $status-unknown;
+    }
   }
 
   &--fuzzy {
     background: rgba($status-fuzzy, 0.12);
     border: 2rpx solid rgba($status-fuzzy, 0.3);
 
-    .review-rate-btn__icon { color: $status-fuzzy; }
-    .review-rate-btn__label { color: $status-fuzzy; }
+    .review-rate-btn__icon {
+      color: $status-fuzzy;
+    }
+
+    .review-rate-btn__label {
+      color: $status-fuzzy;
+    }
   }
 
   &--know {
     background: rgba($status-know, 0.12);
     border: 2rpx solid rgba($status-know, 0.3);
 
-    .review-rate-btn__icon { color: $status-know; }
-    .review-rate-btn__label { color: $status-know; }
+    .review-rate-btn__icon {
+      color: $status-know;
+    }
+
+    .review-rate-btn__label {
+      color: $status-know;
+    }
   }
 }
 
@@ -298,9 +400,82 @@
   font-weight: $font-weight-semibold;
 }
 
+// ─── Stroke Animation ──────────────────────────────────────────────────────
+.stroke-animation {
+  @include flex-col;
+  align-items: center;
+  gap: $gap-sm;
+  padding: $gap-md 0;
+  border-top: 2rpx solid $border-light;
+  flex-shrink: 0;
+}
+
+.stroke-animation__replay {
+  background: $bg-surface;
+  border-radius: $radius-btn;
+  padding: 8rpx $gap-md;
+
+  &:active {
+    opacity: 0.7;
+  }
+}
+
+.stroke-animation__replay-text {
+  font-size: $font-size-sm;
+  color: $text-secondary;
+  font-weight: $font-weight-medium;
+}
+
 // ─── Flip Hint ─────────────────────────────────────────────────────────────
 .review-flip-hint__text {
   font-size: $font-size-md;
   color: $text-muted;
   font-style: italic;
+}
+
+// ─── Stroke Section Placeholder ────────────────────────────────────────────
+.review-card__stroke-section {
+  @include flex-col;
+  gap: $gap-sm;
+  flex-shrink: 0;
+}
+
+.review-card__stroke-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.review-card__stroke-label {
+  font-size: $font-size-sm;
+  font-weight: $font-weight-semibold;
+  color: $text-secondary;
+}
+
+.review-card__stroke-btns {
+  display: flex;
+  gap: $gap-xs;
+}
+
+.review-card__stroke-btn {
+  background: $bg-surface;
+  border-radius: $radius-btn;
+  padding: 6rpx $gap-md;
+
+  &:active {
+    opacity: 0.7;
+  }
+}
+
+.review-card__stroke-btn-text {
+  font-size: $font-size-sm;
+  color: $text-secondary;
+  font-weight: $font-weight-medium;
+}
+
+.review-card__stroke-canvas {
+  height: 200rpx;
+  background: $bg-surface;
+  border-radius: $radius-card;
+  border: 2rpx solid $border-light;
 }
