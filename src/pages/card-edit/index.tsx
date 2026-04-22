@@ -1,32 +1,122 @@
 /* eslint-disable no-undef */
-declare const wx: any
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import Taro, { useRouter } from '@tarojs/taro'
 import { getCards, createCard, updateCard, deleteCard } from '@/api/cards'
 import { lookupWord } from '@/api/lookup'
 import { fetchTTS } from '@/api/tts'
 import { BASE_URL } from '@/api/request'
 import { loginReady } from '@/utils/loginReady'
+import CardEditForm, { type WordLookup } from './components/CardEditForm'
+import './index.scss'
+
+declare const wx: any
 
 const KANA_AUDIO_SET = new Set([
-  'a','i','u','e','o',
-  'ba','be','bi','bo','bu','bya','byo','byu',
-  'ci','cu','cya','cyo','cyu',
-  'da','de','di','do','du',
-  'ga','ge','gi','go','gu','gya','gyo','gyu',
-  'ha','he','hi','ho','hu','hya','hyo','hyu',
-  'ka','ke','ki','ko','ku','kya','kyo','kyu',
-  'ma','me','mi','mo','mu','mya','myo','myu',
-  'n','na','ne','ni','no','nu','nya','nyo','nyu',
-  'pa','pe','pi','po','pu','pya','pyo','pyu',
-  'ra','re','ri','ro','ru','rya','ryo','ryu',
-  'sa','se','si','so','su','sya','syo','syu',
-  'ta','te','to',
-  'u','wa','ya','yo','yu',
-  'za','ze','zi','zo','zu','zya','zyo','zyu',
+  'a',
+  'i',
+  'u',
+  'e',
+  'o',
+  'ba',
+  'be',
+  'bi',
+  'bo',
+  'bu',
+  'bya',
+  'byo',
+  'byu',
+  'ci',
+  'cu',
+  'cya',
+  'cyo',
+  'cyu',
+  'da',
+  'de',
+  'di',
+  'do',
+  'du',
+  'ga',
+  'ge',
+  'gi',
+  'go',
+  'gu',
+  'gya',
+  'gyo',
+  'gyu',
+  'ha',
+  'he',
+  'hi',
+  'ho',
+  'hu',
+  'hya',
+  'hyo',
+  'hyu',
+  'ka',
+  'ke',
+  'ki',
+  'ko',
+  'ku',
+  'kya',
+  'kyo',
+  'kyu',
+  'ma',
+  'me',
+  'mi',
+  'mo',
+  'mu',
+  'mya',
+  'myo',
+  'myu',
+  'n',
+  'na',
+  'ne',
+  'ni',
+  'no',
+  'nu',
+  'nya',
+  'nyo',
+  'nyu',
+  'pa',
+  'pe',
+  'pi',
+  'po',
+  'pu',
+  'pya',
+  'pyo',
+  'pyu',
+  'ra',
+  're',
+  'ri',
+  'ro',
+  'ru',
+  'rya',
+  'ryo',
+  'ryu',
+  'sa',
+  'se',
+  'si',
+  'so',
+  'su',
+  'sya',
+  'syo',
+  'syu',
+  'ta',
+  'te',
+  'to',
+  'u',
+  'wa',
+  'ya',
+  'yo',
+  'yu',
+  'za',
+  'ze',
+  'zi',
+  'zo',
+  'zu',
+  'zya',
+  'zyo',
+  'zyu',
 ])
-import CardEditForm from './components/CardEditForm'
-import './index.scss'
 
 export default function CardEdit() {
   const router = useRouter()
@@ -44,7 +134,7 @@ export default function CardEdit() {
   const [example, setExample] = useState('')
   const [frontError, setFrontError] = useState('')
   const [lookupLoading, setLookupLoading] = useState(false)
-  const [lookupResult, setLookupResult] = useState<{ reading: string; romaji: string; meaning: string } | null>(null)
+  const [lookupResult, setLookupResult] = useState<WordLookup | null>(null)
   const [ttsLoading, setTtsLoading] = useState(false)
   const audioRef = useRef<Taro.InnerAudioContext | null>(null)
 
@@ -64,6 +154,11 @@ export default function CardEdit() {
           setExample(card.example ?? '')
         }
       })
+    }
+    return () => {
+      audioRef.current?.stop()
+      audioRef.current?.destroy()
+      audioRef.current = null
     }
   }, [])
 
@@ -127,13 +222,17 @@ export default function CardEdit() {
       const { audio } = await fetchTTS(front.trim())
       const fs = wx.getFileSystemManager()
       const dir = wx.env.USER_DATA_PATH
-      await new Promise<void>((resolve) => {
+      await new Promise<void>(resolve => {
         fs.readdir({
           dirPath: dir,
           success: ({ files }: { files: string[] }) => {
-            files.filter((f: string) => f.startsWith('tts_')).forEach((f: string) => {
-              try { fs.unlinkSync(`${dir}/${f}`) } catch (_) {}
-            })
+            files
+              .filter((f: string) => f.startsWith('tts_'))
+              .forEach((f: string) => {
+                try {
+                  fs.unlinkSync(`${dir}/${f}`)
+                } catch (_) {}
+              })
             resolve()
           },
           fail: () => resolve(),
@@ -141,7 +240,13 @@ export default function CardEdit() {
       })
       const tmpPath = `${dir}/tts_${Date.now()}.mp3`
       await new Promise<void>((resolve, reject) => {
-        fs.writeFile({ filePath: tmpPath, data: audio, encoding: 'base64', success: () => resolve(), fail: (e: any) => reject(new Error(e.errMsg)) })
+        fs.writeFile({
+          filePath: tmpPath,
+          data: audio,
+          encoding: 'base64',
+          success: () => resolve(),
+          fail: (e: any) => reject(new Error(e.errMsg)),
+        })
       })
       const ctx = Taro.createInnerAudioContext()
       ctx.obeyMuteSwitch = false
@@ -183,11 +288,21 @@ export default function CardEdit() {
         await createCard(deckId, buildFields())
       }
       Taro.showToast({ title: isEdit ? '已保存' : '卡片已创建', icon: 'success' })
-      setTimeout(() => Taro.navigateBack(), 800)
+      Taro.navigateBack()
     } catch (e: any) {
       setFrontError(e.message ?? '保存失败')
     }
   }
+
+  const handleFrontChange = useCallback((val: string) => {
+    setFront(val)
+    setFrontError('')
+  }, [])
+
+  const handleReadingChange = useCallback((val: string) => {
+    setReading(val)
+    setRomaji(val)
+  }, [])
 
   const handleDelete = () => {
     Taro.showModal({
@@ -195,46 +310,42 @@ export default function CardEdit() {
       content: '确认删除这张卡片？',
       confirmText: '删除',
       confirmColor: '#FF3B30',
-      success: async (res) => {
+      success: async res => {
         if (res.confirm) {
           await deleteCard(deckId, cardId)
           Taro.showToast({ title: '已删除', icon: 'success' })
-          setTimeout(() => Taro.navigateBack(), 800)
+          Taro.navigateBack()
         }
-      }
+      },
     })
   }
 
   return (
     <CardEditForm
-      front={front}
-      back={back}
-      reading={reading}
-      romaji={romaji}
-      pitch={pitch}
-      meaning={meaning}
-      example={example}
-      frontError={frontError}
-      isEdit={isEdit}
-      isValid={isValid}
       isJa={isJa}
-      lookupLoading={lookupLoading}
-      ttsLoading={ttsLoading}
-      lookupResult={lookupResult}
-      onFrontChange={(val) => { setFront(val); setFrontError('') }}
-      onBackChange={setBack}
-      onReadingChange={(val) => { setReading(val); setRomaji(val) }}
-      onRomajiChange={setRomaji}
-      onPitchChange={setPitch}
-      onMeaningChange={setMeaning}
-      onExampleChange={setExample}
-      onLookup={handleLookup}
-      onLookupImport={handleLookupImport}
-      onLookupDismiss={() => setLookupResult(null)}
-      onPlayReadingTTS={handlePlayReadingTTS}
-      onSave={handleSave}
-      onSaveAndContinue={handleSaveAndContinue}
-      onDelete={handleDelete}
+      frontField={{ value: front, error: frontError, onChange: handleFrontChange }}
+      backField={{ value: back, onChange: setBack }}
+      lookup={{
+        loading: lookupLoading,
+        result: lookupResult,
+        onTrigger: handleLookup,
+        onImport: handleLookupImport,
+        onDismiss: () => setLookupResult(null),
+      }}
+      readingField={{
+        value: reading,
+        ttsLoading,
+        onChange: handleReadingChange,
+        onPlayTTS: handlePlayReadingTTS,
+      }}
+      exampleField={{ value: example, onChange: setExample }}
+      actions={{
+        isEdit,
+        isValid,
+        onSave: handleSave,
+        onSaveAndContinue: handleSaveAndContinue,
+        onDelete: handleDelete,
+      }}
     />
   )
 }
