@@ -21,7 +21,8 @@ export default function Review() {
   const [results, setResults] = useState<ReviewResult[]>([]);
   const [ttsLoading, setTtsLoading] = useState(false);
   const audioRef = useRef<Taro.InnerAudioContext | null>(null);
-  const ttsFileCache = useRef<Map<string, string>>(new Map());
+  const bufferUrlRef = useRef<string | null>(null);
+  const ttsBufferCache = useRef<Map<string, ArrayBuffer>>(new Map());
 
   useEffect(() => {
     const session = getReviewSession<{ cards: ApiCard[]; deckId: string }>();
@@ -40,31 +41,15 @@ export default function Review() {
     };
   }, []);
 
-  useEffect(() => {
-    return () => {
-      const fs = wx.getFileSystemManager();
-      const dir = wx.env.USER_DATA_PATH;
-      fs.readdir({
-        dirPath: dir,
-        success: ({ files }: { files: string[] }) => {
-          files
-            .filter((f: string) => f.startsWith("tts_"))
-            .forEach((f: string) => {
-              try {
-                fs.unlinkSync(`${dir}/${f}`);
-              } catch {}
-            });
-        },
-        fail: () => {},
-      });
-    };
-  }, []);
-
   const stopAudio = () => {
     if (audioRef.current) {
       audioRef.current.stop();
       audioRef.current.destroy();
       audioRef.current = null;
+    }
+    if (bufferUrlRef.current) {
+      wx.revokeBufferURL(bufferUrlRef.current);
+      bufferUrlRef.current = null;
     }
   };
 
@@ -108,46 +93,31 @@ export default function Review() {
     });
   };
 
-  const writeBase64ToFile = async (audio: string): Promise<string> => {
-    const fs = wx.getFileSystemManager();
-    const dir = wx.env.USER_DATA_PATH;
-    const filePath = `${dir}/tts_${Date.now()}.mp3`;
-    await new Promise<void>((resolve, reject) => {
-      fs.writeFile({
-        filePath,
-        data: audio,
-        encoding: "base64",
-        success: () => resolve(),
-        fail: (err: { errMsg: string }) => reject(new Error(err.errMsg)),
-      });
-    });
-    return filePath;
-  };
-
   const handlePlayTTS = async () => {
     if (!currentCard || ttsLoading) return;
     const text = currentCard.reading || currentCard.front || currentCard.back;
 
-    const cached = ttsFileCache.current.get(text);
-    if (cached) {
-      stopAudio();
-      playUrl(cached);
-      return;
-    }
-
-    setTtsLoading(true);
     stopAudio();
-    try {
-      const { audio } = await fetchTTS(text);
-      const filePath = await writeBase64ToFile(audio);
-      ttsFileCache.current.set(text, filePath);
-      playUrl(filePath);
-    } catch (e: unknown) {
-      const msg = e instanceof Error ? e.message : "TTS 失败";
-      Taro.showToast({ title: msg, icon: "none" });
-    } finally {
+
+    let buffer = ttsBufferCache.current.get(text);
+    if (!buffer) {
+      setTtsLoading(true);
+      try {
+        const { audio } = await fetchTTS(text);
+        buffer = wx.base64ToArrayBuffer(audio);
+        ttsBufferCache.current.set(text, buffer);
+      } catch (e: unknown) {
+        const msg = e instanceof Error ? e.message : "TTS 失败";
+        Taro.showToast({ title: msg, icon: "none" });
+        setTtsLoading(false);
+        return;
+      }
       setTtsLoading(false);
     }
+
+    const url = wx.createBufferURL(buffer);
+    bufferUrlRef.current = url;
+    playUrl(url);
   };
 
   const handleFlip = () => {

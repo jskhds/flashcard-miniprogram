@@ -1,4 +1,5 @@
 import { View, Text, ScrollView } from "@tarojs/components";
+import Taro from "@tarojs/taro";
 import { ApiCard } from "@/types/api/card";
 
 interface ReviewCardProps {
@@ -8,6 +9,12 @@ interface ReviewCardProps {
   ttsLoading: boolean;
   onFlip: () => void;
   onPlayTTS: () => void;
+}
+
+function isSingleKana(char: string): boolean {
+  if (char.length !== 1) return false;
+  const code = char.charCodeAt(0);
+  return (code >= 0x3041 && code <= 0x3096) || (code >= 0x30a1 && code <= 0x30f6);
 }
 
 function getFrontFontSize(len: number): string {
@@ -33,6 +40,7 @@ export default function ReviewCard({
   onPlayTTS,
 }: ReviewCardProps) {
   const hasReading = !!card.reading;
+  const canPracticeStroke = isSingleKana(card.front);
 
   return (
     <View className="review-card-container">
@@ -90,41 +98,33 @@ export default function ReviewCard({
                     className={`review-card__tts-btn ${
                       ttsLoading ? "review-card__tts-btn--loading" : ""
                     }`}
-                    onClick={(e) => {
+                    onClick={e => {
                       e.stopPropagation();
                       onPlayTTS();
                     }}
                   >
-                    <Text className="review-card__tts-icon">
-                      {ttsLoading ? "···" : "▶"}
-                    </Text>
+                    <Text className="review-card__tts-icon">{ttsLoading ? "···" : "▶"}</Text>
                   </View>
+                  {canPracticeStroke && (
+                    <View
+                      className="review-card__write-btn"
+                      onClick={e => {
+                        e.stopPropagation();
+                        Taro.navigateTo({
+                          url: `/pages/stroke-practice/index?char=${encodeURIComponent(card.front)}`,
+                        });
+                      }}
+                    >
+                      <Text className="review-card__write-icon">✏️</Text>
+                    </View>
+                  )}
                 </View>
               )}
-
-              {/* 笔顺占位 */}
-              <View className="review-card__divider" />
-              <View className="review-card__stroke-section">
-                <View className="review-card__stroke-header">
-                  <Text className="review-card__stroke-label">笔顺</Text>
-                  <View className="review-card__stroke-btns">
-                    <View className="review-card__stroke-btn">
-                      <Text className="review-card__stroke-btn-text">播放</Text>
-                    </View>
-                    <View className="review-card__stroke-btn">
-                      <Text className="review-card__stroke-btn-text">重播</Text>
-                    </View>
-                  </View>
-                </View>
-                <View className="review-card__stroke-canvas" />
-              </View>
             </View>
           </View>
         </View>
       </View>
-      {!isFlipped && (
-        <Text className="review-flip-hint__text">轻触卡片查看答案</Text>
-      )}
+      {!isFlipped && <Text className="review-flip-hint__text">轻触卡片查看答案</Text>}
     </View>
   );
 }

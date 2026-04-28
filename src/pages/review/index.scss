@@ -82,7 +82,9 @@
   &--sliding {
     transform: translateX(-120%) rotateY(0deg);
     opacity: 0;
-    transition: transform 0.28s ease, opacity 0.28s ease;
+    transition:
+      transform 0.28s ease,
+      opacity 0.28s ease;
   }
 
   &--flipped.review-card--sliding {
@@ -314,6 +316,23 @@
   font-size: $font-size-xs;
   line-height: 1;
   color: $text-inverse;
+}
+
+.review-card__write-btn {
+  width: 36rpx;
+  height: 36rpx;
+  @include flex-center;
+  flex-shrink: 0;
+  margin-left: 8rpx;
+
+  &:active {
+    opacity: 0.7;
+  }
+}
+
+.review-card__write-icon {
+  font-size: $font-size-xs;
+  line-height: 1;
 }
 
 // ─── Rating Buttons ────────────────────────────────────────────────────────
