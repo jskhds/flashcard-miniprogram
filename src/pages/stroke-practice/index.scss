@@ -1,0 +1,110 @@
+// pages/stroke-practice/index.scss
+.stroke-practice-page {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #f5f5f5;
+}
+
+.stroke-practice-page--center {
+  justify-content: center;
+  align-items: center;
+  gap: 24px;
+}
+
+.stroke-header {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.stroke-char {
+  font-size: 36px;
+  font-weight: bold;
+  color: #333;
+}
+
+.stroke-hint {
+  font-size: 16px;
+  color: #555;
+}
+
+.stroke-loading {
+  font-size: 16px;
+  color: #999;
+}
+
+.stroke-complete-char {
+  font-size: 72px;
+  font-weight: bold;
+  color: #333;
+}
+
+.stroke-complete-text {
+  font-size: 24px;
+  color: #27ae60;
+  font-weight: bold;
+}
+
+.canvas-container {
+  position: relative;
+  width: 320px;
+  height: 320px;
+}
+
+.reference-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+.controls {
+  margin-top: 20px;
+  display: flex;
+  gap: 10px;
+}
+
+.match-result {
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: bold;
+
+  &.passed {
+    background: #e6f9ed;
+    color: #27ae60;
+  }
+
+  &.failed {
+    background: #fff0f0;
+    color: #e74c3c;
+  }
+
+  .score {
+    font-size: 14px;
+    font-weight: normal;
+    opacity: 0.7;
+  }
+}
+
+.btn-clear {
+  padding: 12px 30px;
+  background: #ff6b6b;
+  color: white;
+  border-radius: 8px;
+  font-size: 16px;
+  text-align: center;
+
+  &:active {
+    opacity: 0.8;
+  }
+}
