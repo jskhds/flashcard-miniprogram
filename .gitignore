@@ -27,3 +27,6 @@ npm-debug.log*
 
 # Claude Code local settings
 .claude/settings.local.json
+
+# WeChat DevTools 个人配置（新增）
+project.private.config.json
