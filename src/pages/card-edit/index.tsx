@@ -1,14 +1,11 @@
-/* eslint-disable no-undef */
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Taro, { useRouter } from "@tarojs/taro";
 import { getCards, createCard, updateCard, deleteCard } from "@/api/cards";
 import { lookupWord } from "@/api/lookup";
-import { fetchTTS } from "@/api/tts";
 import { loginReady } from "@/utils/loginReady";
+import { useTTS } from "@/hooks/useTTS";
 import CardEditForm, { type WordLookup } from "./components/CardEditForm";
 import "./index.scss";
-
-declare const wx: any;
 
 export default function CardEdit() {
   const router = useRouter();
@@ -27,8 +24,7 @@ export default function CardEdit() {
   const [frontError, setFrontError] = useState("");
   const [lookupLoading, setLookupLoading] = useState(false);
   const [lookupResult, setLookupResult] = useState<WordLookup | null>(null);
-  const [ttsLoading, setTtsLoading] = useState(false);
-  const audioRef = useRef<Taro.InnerAudioContext | null>(null);
+  const { ttsLoading, playTTS, stopAudio } = useTTS();
 
   useEffect(() => {
     Taro.setNavigationBarTitle({ title: isEdit ? "编辑卡片" : "新建卡片" });
@@ -48,10 +44,9 @@ export default function CardEdit() {
       });
     }
     return () => {
-      audioRef.current?.stop();
-      audioRef.current?.destroy();
-      audioRef.current = null;
+      stopAudio();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const isValid = front.trim().length > 0 && back.trim().length > 0;
@@ -88,56 +83,6 @@ export default function CardEdit() {
     setMeaning(lookupResult.meaning);
     if (!back.trim()) setBack(lookupResult.meaning);
     setLookupResult(null);
-  };
-
-  const handlePlayReadingTTS = async () => {
-    if (!reading.trim() || ttsLoading) return;
-    setTtsLoading(true);
-    if (audioRef.current) {
-      audioRef.current.stop();
-      audioRef.current.destroy();
-      audioRef.current = null;
-    }
-    try {
-      const { audio } = await fetchTTS(front.trim());
-      const fs = wx.getFileSystemManager();
-      const dir = wx.env.USER_DATA_PATH;
-      await new Promise<void>(resolve => {
-        fs.readdir({
-          dirPath: dir,
-          success: ({ files }: { files: string[] }) => {
-            files
-              .filter((f: string) => f.startsWith("tts_"))
-              .forEach((f: string) => {
-                try {
-                  fs.unlinkSync(`${dir}/${f}`);
-                } catch (_) {}
-              });
-            resolve();
-          },
-          fail: () => resolve(),
-        });
-      });
-      const tmpPath = `${dir}/tts_${Date.now()}.mp3`;
-      await new Promise<void>((resolve, reject) => {
-        fs.writeFile({
-          filePath: tmpPath,
-          data: audio,
-          encoding: "base64",
-          success: () => resolve(),
-          fail: (e: any) => reject(new Error(e.errMsg)),
-        });
-      });
-      const ctx = Taro.createInnerAudioContext();
-      ctx.obeyMuteSwitch = false;
-      audioRef.current = ctx;
-      ctx.src = tmpPath;
-      ctx.play();
-    } catch (e: any) {
-      Taro.showToast({ title: e.message ?? "TTS 失败", icon: "none" });
-    } finally {
-      setTtsLoading(false);
-    }
   };
 
   const handleSaveAndContinue = async () => {
@@ -216,7 +161,7 @@ export default function CardEdit() {
         value: reading,
         ttsLoading,
         onChange: handleReadingChange,
-        onPlayTTS: handlePlayReadingTTS,
+        onPlayTTS: () => playTTS(front.trim()),
       }}
       exampleField={{ value: example, onChange: setExample }}
       actions={{
