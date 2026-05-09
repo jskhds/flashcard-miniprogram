@@ -91,13 +91,22 @@ const TextSample = forwardRef<TextSampleHandle, TextSampleProps>(function TextSa
     for (let i = 0; i < passed; i++) {
       drawPassedStroke(ctx, strokes[i], config.width);
     }
-    if (currentMode === "guided") {
-      for (let i = passed; i < strokes.length; i++) {
-        drawGuidedStroke(ctx, strokes[i], i + 1, config.width);
+    if (fails >= 4 && passed < strokes.length) {
+      if (currentMode === "guided") {
+        for (let i = passed + 1; i < strokes.length; i++) {
+          drawGuidedStroke(ctx, strokes[i], i + 1, config.width);
+        }
       }
-    }
-    if (fails >= 2 && passed < strokes.length) {
-      drawHintArrow(ctx, strokes[passed], config.width);
+      drawRevealedStroke(ctx, strokes[passed], config.width);
+    } else {
+      if (currentMode === "guided") {
+        for (let i = passed; i < strokes.length; i++) {
+          drawGuidedStroke(ctx, strokes[i], i + 1, config.width);
+        }
+      }
+      if (fails >= 2 && passed < strokes.length) {
+        drawHintArrow(ctx, strokes[passed], config.width);
+      }
     }
   };
 
@@ -159,6 +168,28 @@ const TextSample = forwardRef<TextSampleHandle, TextSampleProps>(function TextSa
     ctx.textAlign = "center";
     ctx.textBaseline = "middle";
     ctx.fillText(num.toString(), x, y);
+    ctx.restore();
+  };
+
+  const drawRevealedStroke = (
+    ctx: CanvasRenderingContext2D,
+    stroke: StrokeRef,
+    canvasWidth: number
+  ) => {
+    const { points } = stroke;
+    if (points.length === 0) return;
+    ctx.save();
+    ctx.beginPath();
+    ctx.setLineDash([5, 5]);
+    ctx.strokeStyle = "#f5a623";
+    ctx.lineWidth = 3;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.moveTo(points[0][0] * canvasWidth, points[0][1] * canvasWidth);
+    for (let i = 1; i < points.length; i++) {
+      ctx.lineTo(points[i][0] * canvasWidth, points[i][1] * canvasWidth);
+    }
+    ctx.stroke();
     ctx.restore();
   };
 
