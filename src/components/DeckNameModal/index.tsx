@@ -32,14 +32,14 @@ export default function DeckNameModal({
       <View
         className="modal-sheet"
         style={{ marginBottom: keyboardHeight ? `${keyboardHeight}px` : "0" }}
-        onClick={(e) => e.stopPropagation()}
+        onClick={e => e.stopPropagation()}
       >
         <Text className="modal-title">{title}</Text>
         <Input
           className={`modal-input ${error ? "modal-input--error" : ""}`}
           value={value}
-          onInput={(e) => onInput(e.detail.value)}
-          onKeyboardHeightChange={(e) => setKeyboardHeight(e.detail.height)}
+          onInput={e => onInput(e.detail.value)}
+          onKeyboardHeightChange={e => setKeyboardHeight(e.detail.height)}
           placeholder="输入卡组名称..."
           maxlength={30}
           adjustPosition={false}
@@ -50,18 +50,19 @@ export default function DeckNameModal({
         {onToggleJa && (
           <View
             className="modal-toggle-row"
-            onClick={(e) => {
+            onClick={e => {
               e.stopPropagation();
               onToggleJa();
             }}
           >
             <View className="modal-toggle-label">
               <Text className="modal-toggle-title">日语词典模式</Text>
-              <Text className="modal-toggle-desc">
-                显示读音、释义和查词功能
-              </Text>
+              <Text className="modal-toggle-desc">显示读音、释义和查词功能</Text>
             </View>
-            <Switch checked={isJa} color="#F4845F" onChange={onToggleJa} />
+            {/* 拦截 Switch 的 tap 冒泡，避免父 View onClick 和 onChange 各触发一次 */}
+            <View onClick={e => e.stopPropagation()}>
+              <Switch checked={isJa} color="#F4845F" onChange={onToggleJa} />
+            </View>
           </View>
         )}
 
@@ -70,9 +71,7 @@ export default function DeckNameModal({
             <Text>取消</Text>
           </View>
           <View
-            className={`modal-btn modal-btn--confirm ${
-              !value.trim() ? "modal-btn--disabled" : ""
-            }`}
+            className={`modal-btn modal-btn--confirm ${!value.trim() ? "modal-btn--disabled" : ""}`}
             onClick={onConfirm}
           >
             <Text>{confirmText}</Text>
