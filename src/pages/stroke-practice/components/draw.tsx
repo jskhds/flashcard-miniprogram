@@ -7,8 +7,6 @@ import "./draw.scss";
 
 export interface DrawHandle {
   clear: () => void;
-  /** 清除最后一笔失败的笔迹，并将已通过的笔画重新画回 */
-  revertLastStroke: (passedStrokes: [number, number][][]) => void;
 }
 
 interface DrawProps {
@@ -24,26 +22,6 @@ const Draw = forwardRef<DrawHandle, DrawProps>(function Draw({ config, onStrokeE
 
   useImperativeHandle(ref, () => ({
     clear: () => signatureRef.current?.clear(),
-    revertLastStroke: (passedStrokes: [number, number][][]) => {
-      signatureRef.current?.clear();
-      const ctx = ctxRef.current;
-      if (!ctx || passedStrokes.length === 0) return;
-      passedStrokes.forEach(points => {
-        if (points.length < 2) return;
-        ctx.save();
-        ctx.beginPath();
-        ctx.strokeStyle = "#333";
-        ctx.lineWidth = 3;
-        ctx.lineCap = "round";
-        ctx.lineJoin = "round";
-        ctx.moveTo(points[0][0], points[0][1]);
-        for (let i = 1; i < points.length; i++) {
-          ctx.lineTo(points[i][0], points[i][1]);
-        }
-        ctx.stroke();
-        ctx.restore();
-      });
-    },
   }));
 
   const initSignature = () => {
