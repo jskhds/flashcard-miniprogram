@@ -111,10 +111,6 @@ export default function StrokePractice() {
   return (
     <View className="stroke-practice-page">
       <View className="stroke-header">
-        <Text className="stroke-char">{char}</Text>
-        <Text className="stroke-hint">
-          第 {strokeIndex + 1} / {total} 笔
-        </Text>
         <View className="mode-toggle" onClick={handleModeToggle}>
           {mode === "guided" ? "盲写" : "引导"}
         </View>
